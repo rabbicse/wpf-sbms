@@ -1,0 +1,13 @@
+﻿<ViewBase:WindowBase x:Class="SBMS.View.ShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Prism="http://www.codeplex.com/prism"
+        xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"   
+        xmlns:wpfHelper="clr-namespace:EkushApp.WpfControls.Helper;assembly=EkushApp.WpfControls"
+        WindowState="Maximized" WindowStyle="None" WindowStartupLocation="CenterScreen"
+        Icon="pack://application:,,,/Images/sbms.ico"
+        AllowsTransparency="True" AllowDrop="True">
+    <Grid>
+        <Button Content="Test" />
+    </Grid>
+</ViewBase:WindowBase>
