@@ -22,7 +22,7 @@ using EkushApp.Model;
 using EkushApp.ShellService.Commands;
 using EkushApp.Utility.Threads;
 using EkushApp.Utility.Tasks;
-using NID.ViewModel;
+
 
 namespace SBMS
 {

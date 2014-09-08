@@ -23,7 +23,7 @@ namespace SBMS.View
     /// 
     [Export(typeof(ISupplierView))]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public partial class SupplierView : UserControlBase
+    public partial class SupplierView : UserControlBase, ISupplierView
     {
         public SupplierView()
         {

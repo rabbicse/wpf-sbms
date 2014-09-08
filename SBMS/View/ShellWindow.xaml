@@ -67,7 +67,19 @@
 
             <!-- Main Content -->
             <Grid Grid.Row="2">
-                <ContentControl Content="{Binding MainContent, Mode=OneWay, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" />
+                <!--<ContentControl Content="{Binding MainContent, Mode=OneWay, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" />-->
+                <TabControl ItemsSource="{Binding TabCollection, IsAsync=True}" SelectedItem="{Binding SelectedTab, IsAsync=True}">
+                    <TabControl.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="test" />
+                        </DataTemplate>
+                    </TabControl.ItemTemplate>
+                    <TabControl.ContentTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding View}" />
+                        </DataTemplate>
+                    </TabControl.ContentTemplate>
+                </TabControl>
             </Grid>
 
             <!-- Footer -->

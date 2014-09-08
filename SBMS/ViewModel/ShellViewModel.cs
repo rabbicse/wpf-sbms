@@ -17,7 +17,7 @@ using EkushApp.Utility.WinRegistry;
 using SBMS.View;
 using EkushApp.ShellService.Commands;
 
-namespace NID.ViewModel
+namespace SBMS.ViewModel
 {
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
@@ -33,6 +33,49 @@ namespace NID.ViewModel
         #endregion
 
         #region Property(s)
+        private Lazy<OptimizedObservableCollection<IViewModel>> _tabCollection;
+        public OptimizedObservableCollection<IViewModel> TabCollection
+        {
+            get { return _tabCollection.Value; }
+        }
+        #endregion
+        #region ViewModel(s)
+        private HardwareViewModel _hardwareVM;
+        public HardwareViewModel HardwareVM
+        {
+            get
+            {
+                if (_hardwareVM == null)
+                {
+                    _hardwareVM = ShellContainer.GetExportedInstance<HardwareViewModel>();
+                }
+                return _hardwareVM;
+            }
+        }
+        private UserViewModel _userVM;
+        public UserViewModel UserVM
+        {
+            get
+            {
+                if (_userVM == null)
+                {
+                    _userVM = ShellContainer.GetExportedInstance<UserViewModel>();
+                }
+                return _userVM;
+            }
+        }
+        private SupplierViewModel _supplierVM;
+        public SupplierViewModel SupplierVM
+        {
+            get
+            {
+                if (_supplierVM == null)
+                {
+                    _supplierVM = ShellContainer.GetExportedInstance<SupplierViewModel>();
+                }
+                return _supplierVM;
+            }
+        }
         #endregion
 
         #region Constructor(s)
@@ -45,6 +88,7 @@ namespace NID.ViewModel
             EventAggregator = eventAggregator;
             ShellService = shellService;
             LogoutCommand = new CommandHandler<object, object>(LogoutCommandAction);
+            _tabCollection = new Lazy<OptimizedObservableCollection<IViewModel>>();
         }
         #endregion
 
@@ -65,7 +109,9 @@ namespace NID.ViewModel
         #region ViewModelBase
         public override void OnLoad()
         {
-
+            TabCollection.Add(HardwareVM);
+            TabCollection.Add(UserVM);
+            TabCollection.Add(SupplierVM);
         }
 
         public override void OnClosing()
