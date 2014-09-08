@@ -13,6 +13,7 @@ namespace SBMS.ViewModel
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class HardwareViewModel: ViewModelBase
     {
+        public string Tag { get { return "Hardware"; } }
         #region Constructor(s)
         [ImportingConstructor]
         public HardwareViewModel(IHardwareView view) 

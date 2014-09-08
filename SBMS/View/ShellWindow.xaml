@@ -71,7 +71,7 @@
                 <TabControl ItemsSource="{Binding TabCollection, IsAsync=True}" SelectedItem="{Binding SelectedTab, IsAsync=True}">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="test" />
+                            <TextBlock Text="{Binding Tag}" />
                         </DataTemplate>
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>

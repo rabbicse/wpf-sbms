@@ -13,6 +13,7 @@ namespace SBMS.ViewModel
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class SupplierViewModel : ViewModelBase
     {
+        public string Tag { get { return "Supplier"; } }
         #region Constructor(s)
         [ImportingConstructor]
         public SupplierViewModel(ISupplierView view)

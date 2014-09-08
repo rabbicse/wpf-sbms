@@ -13,6 +13,7 @@ namespace SBMS.ViewModel
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class UserViewModel : ViewModelBase
     {
+        public string Tag { get { return "User"; } }
         #region Constructor(s)
         [ImportingConstructor]
         public UserViewModel(IUserView view)

@@ -38,6 +38,16 @@ namespace SBMS.ViewModel
         {
             get { return _tabCollection.Value; }
         }
+        private IViewModel _selectedTab;
+        public IViewModel SelectedTab
+        {
+            get { return _selectedTab; }
+            set
+            {
+                _selectedTab = value;
+                OnPropertyChanged(() => SelectedTab);
+            }
+        }
         #endregion
         #region ViewModel(s)
         private HardwareViewModel _hardwareVM;
@@ -112,6 +122,7 @@ namespace SBMS.ViewModel
             TabCollection.Add(HardwareVM);
             TabCollection.Add(UserVM);
             TabCollection.Add(SupplierVM);
+            SelectedTab = TabCollection.FirstOrDefault();
         }
 
         public override void OnClosing()
