@@ -27,7 +27,7 @@
             <BeginStoryboard Storyboard="{StaticResource InTransition}"/>
         </EventTrigger>
     </ViewBase:WindowBase.Triggers>
-    <Border BorderBrush="#FF0C3DA2" BorderThickness="1" Margin="1,1,0,0">
+    <Border BorderBrush="#FF0C3DA2" BorderThickness="1" Margin="5">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -61,7 +61,6 @@
                     </TextBlock.Effect>
                 </TextBlock>
                 <StackPanel Grid.Column="3" Orientation="Horizontal">
-                    <Button Content="Show Printers" Command="{Binding ShowPrintersCommand, Mode=OneWay}" CommandParameter="{Binding MonitorId}" Cursor="Hand" FontWeight="Bold" Width="120" Height="22" Margin="10,0,0,0" Visibility="{Binding IsDetailsView, Converter={StaticResource BoolToVisibilityConverter}}" />
                     <Button Content="Logout" Cursor="Hand" HorizontalAlignment="Left" Width="100" Height="20" FontWeight="Bold" Command="{Binding LogoutCommand, Mode=OneWay}" Margin="5,5,5,5" />
                 </StackPanel>
             </Grid>
