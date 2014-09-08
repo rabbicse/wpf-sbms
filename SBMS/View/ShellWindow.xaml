@@ -1,13 +1,109 @@
 ﻿<ViewBase:WindowBase x:Class="SBMS.View.ShellWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Prism="http://www.codeplex.com/prism"
-        xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"   
+        xmlns:controls="clr-namespace:EkushApp.WpfControls.Controls;assembly=EkushApp.WpfControls"
+        xmlns:l="clr-namespace:EkushApp.Localization.Language;assembly=EkushApp.Localization"
+        xmlns:f="clr-namespace:EkushApp.Localization.Fonts;assembly=EkushApp.Localization"
+        xmlns:fs="clr-namespace:EkushApp.Localization.FontSizes;assembly=EkushApp.Localization"
         xmlns:wpfHelper="clr-namespace:EkushApp.WpfControls.Helper;assembly=EkushApp.WpfControls"
+        xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls"
+        xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"   
         WindowState="Maximized" WindowStyle="None" WindowStartupLocation="CenterScreen"
         Icon="pack://application:,,,/Images/sbms.ico"
         AllowsTransparency="True" AllowDrop="True">
-    <Grid>
-        <Button Content="Test" />
-    </Grid>
+    <ViewBase:WindowBase.Resources>
+        <Storyboard x:Key="InTransition">
+            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Logo" Storyboard.TargetProperty="(UIElement.Opacity)">
+                <SplineDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:01" Value="0.4"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:02" Value="0.8"/>
+                <SplineDoubleKeyFrame KeyTime="00:00:02.5000000" Value="1"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+        <converter:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </ViewBase:WindowBase.Resources>
+    <ViewBase:WindowBase.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource InTransition}"/>
+        </EventTrigger>
+    </ViewBase:WindowBase.Triggers>
+    <Border BorderBrush="#FF0C3DA2" BorderThickness="1" Margin="1,1,0,0">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!-- Header -->
+            <Grid Grid.Row="0" Height="55">
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
+                        <GradientStop Color="#FF0C3DA2" Offset="0.0" />
+                        <GradientStop Color="#FF86C5F9" Offset="1"/>
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="pack://application:,,,/Images/sbms.png" VerticalAlignment="Center" Width="40" Margin="5" />
+                <TextBlock x:Name="Logo" Grid.Column="1" Margin="10,0,5,0" Text="{l:Translate ApplicationName}" FontFamily="{f:FontFamily}" VerticalAlignment="Center" Foreground="GhostWhite" FontWeight="Bold" FontSize="{fs:FontSize 18}">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
+                    </TextBlock.Effect>
+                </TextBlock>
+                <TextBlock Grid.Column="2" Text="{Binding PrinterName}" VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="GhostWhite">
+                    <TextBlock.Effect>
+                        <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
+                    </TextBlock.Effect>
+                </TextBlock>
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <Button Content="Show Printers" Command="{Binding ShowPrintersCommand, Mode=OneWay}" CommandParameter="{Binding MonitorId}" Cursor="Hand" FontWeight="Bold" Width="120" Height="22" Margin="10,0,0,0" Visibility="{Binding IsDetailsView, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <Button Content="Logout" Cursor="Hand" HorizontalAlignment="Left" Width="100" Height="20" FontWeight="Bold" Command="{Binding LogoutCommand, Mode=OneWay}" Margin="5,5,5,5" />
+                </StackPanel>
+            </Grid>
+
+            <!-- Main Content -->
+            <Grid Grid.Row="2">
+                <ContentControl Content="{Binding MainContent, Mode=OneWay, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+
+            <!-- Footer -->
+            <StatusBar Grid.Row="3">
+                <StatusBar.Background>
+                    <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
+                        <GradientStop Color="#FF86C5F9" Offset="0.0"/>
+                        <GradientStop Color="#FF0C3DA2" Offset="1" />
+                    </LinearGradientBrush>
+                </StatusBar.Background>
+                <StatusBarItem HorizontalContentAlignment="Stretch">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Administrator" FontSize="12" Foreground="GhostWhite" FontWeight="Bold" MaxWidth="200" TextTrimming="CharacterEllipsis">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Direction="315" Color="#FF0C3DA2" ShadowDepth="3" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBlock Grid.Column="1" Margin="5,2,5,2" Text="{l:Translate Version}" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontSize="{fs:FontSize 11}" FontWeight="Black">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                        <TextBlock Grid.Column="2" Margin="5,2,5,2" Text="{Binding Version}" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontSize="{fs:FontSize 11}" FontWeight="Black">
+                            <TextBlock.Effect>
+                                <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
+                            </TextBlock.Effect>
+                        </TextBlock>
+                    </Grid>
+                </StatusBarItem>
+            </StatusBar>
+        </Grid>
+    </Border>
 </ViewBase:WindowBase>
