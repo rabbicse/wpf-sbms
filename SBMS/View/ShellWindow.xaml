@@ -68,7 +68,7 @@
             <!-- Main Content -->
             <Grid Grid.Row="2">
                 <!--<ContentControl Content="{Binding MainContent, Mode=OneWay, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" />-->
-                <TabControl ItemsSource="{Binding TabCollection, IsAsync=True}" SelectedItem="{Binding SelectedTab, IsAsync=True}">
+                <TabControl ItemsSource="{Binding TabCollection}" SelectedItem="{Binding SelectedTab}">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Tag}" />
@@ -76,7 +76,7 @@
                     </TabControl.ItemTemplate>
                     <TabControl.ContentTemplate>
                         <DataTemplate>
-                            <ContentControl Content="{Binding View}" />
+                            <ContentControl Content="{Binding View, IsAsync=True}" />
                         </DataTemplate>
                     </TabControl.ContentTemplate>
                 </TabControl>

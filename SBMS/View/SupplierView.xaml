@@ -5,6 +5,6 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService">
     <Grid>
-            
+        <TextBlock Text="Supplier" />
     </Grid>
 </ViewBase:UserControlBase>

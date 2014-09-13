@@ -49,6 +49,7 @@ namespace SBMS.ViewModel
             }
         }
         #endregion
+
         #region ViewModel(s)
         private HardwareViewModel _hardwareVM;
         public HardwareViewModel HardwareVM
