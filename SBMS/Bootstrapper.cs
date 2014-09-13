@@ -78,7 +78,7 @@ namespace SBMS
             // TODO TEST, Here we'll delete dirty records etc. before start
             Task.Run(async () =>
                 {
-                    await DbHandler.Instance.SaveUserData(new Users
+                    await DbHandler.Instance.SaveAppUserData(new AppUser
                     {
                         UserId = 1,
                         Username = "admin",

@@ -3,11 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+             xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"
+             xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls">
+    <ViewBase:UserControlBase.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+    </ViewBase:UserControlBase.Resources>
+    <Grid>        
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Category: " Margin="5" />
+            <ComboBox Grid.Row="0" Grid.Column="1" Width="150" ItemsSource="{Binding CategoryCollection}" Margin="5" />
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="Hardware Tag NO: " Margin="5" />
+            <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding HardwareTagNo}" />
+        </Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Path=IsShowPopup, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.6" />
+            <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                <ContentControl Content="{Binding PopupContent, Mode=OneWay}" />
+            </DockPanel>
+        </Grid>
     </Grid>
 </ViewBase:UserControlBase>

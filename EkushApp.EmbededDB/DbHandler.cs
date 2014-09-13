@@ -70,6 +70,9 @@ namespace EkushApp.EmbededDB
         #region Constructor(s)
         public DbHandler()
         {
+            IndexCreation.CreateIndexes(typeof(AppUserMapReduceIndex).Assembly, DocumentStore);
+            IndexCreation.CreateIndexes(typeof(HardwareMapReduceIndex).Assembly, DocumentStore);
+            IndexCreation.CreateIndexes(typeof(SupplierMapReduceIndex).Assembly, DocumentStore);
             IndexCreation.CreateIndexes(typeof(UserMapReduceIndex).Assembly, DocumentStore);
         }
         ~DbHandler()
@@ -78,8 +81,8 @@ namespace EkushApp.EmbededDB
         }
         #endregion
 
-        #region User Operation(s)
-        public void SaveUserData(List<Users> userCollection)
+        #region Users Operation(s)
+        public void SaveUserData(List<AppUser> userCollection)
         {
             try
             {
@@ -93,7 +96,7 @@ namespace EkushApp.EmbededDB
                 Log.Error("Error when saving user data.", x);
             }
         }
-        public async Task SaveUserData(Users user)
+        public async Task SaveAppUserData(AppUser user)
         {
             try
             {
@@ -114,7 +117,7 @@ namespace EkushApp.EmbededDB
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var response = await session.Advanced.AsyncLuceneQuery<Users>("UserMapReduceIndex").Where("Username: " + username).WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    var response = await session.Advanced.AsyncLuceneQuery<AppUser>("AppUserMapReduceIndex").Where("Username: " + username).WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
                     return response != null && response.Any(p => p.Password.Equals(password));
                 }
             }
@@ -124,14 +127,14 @@ namespace EkushApp.EmbededDB
             }
             return false;
         }
-        public async Task<List<Users>> GetUsers()
+        public async Task<List<AppUser>> GetUsers()
         {
-            List<Users> users = new List<Users>();
+            List<AppUser> users = new List<AppUser>();
             try
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var response = await session.Advanced.AsyncLuceneQuery<Users>("UserMapReduceIndex").WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    var response = await session.Advanced.AsyncLuceneQuery<AppUser>("AppUserMapReduceIndex").WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
                     users.AddRange(response);
                 }
             }
@@ -140,6 +143,24 @@ namespace EkushApp.EmbededDB
                 Log.Error("Error when authenticate user.", x);
             }
             return users;
+        }
+        #endregion
+
+        #region Hardware
+        public async Task SaveHardware(Hardware hardware)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    await session.StoreAsync(hardware);
+                    await session.SaveChangesAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
         }
         #endregion
 

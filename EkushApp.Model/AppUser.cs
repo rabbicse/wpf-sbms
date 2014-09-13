@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EkushApp.Model
 {
-    public class Users
+    public class AppUser
     {
         public long UserId { get; set; }
         public string Username { get; set; }
