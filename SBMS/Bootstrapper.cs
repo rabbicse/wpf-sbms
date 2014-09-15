@@ -56,7 +56,7 @@ namespace SBMS
         #endregion
 
         #region StartupApplication
-        private void InitializingApp()
+        private async void InitializingApp()
         {
             // Setting up logging
             LogHandler.SetupLogging(@"\SBMS\SBMS.log", LogLevel.Debug);
@@ -76,19 +76,16 @@ namespace SBMS
             DbHandler.DatabasePath = Globals.EmbededDB.DB_PATH;
 
             // TODO TEST, Here we'll delete dirty records etc. before start
-            Task.Run(async () =>
-                {
-                    await DbHandler.Instance.SaveAppUserData(new AppUser
-                    {
-                        UserId = 1,
-                        Username = "admin",
-                        Password = "admin",
-                        FullName = "Sonali Bank Administrator",
-                        Address = "Dhaka",
-                        DateOfBirth = new DateTime(1990, 1, 1),
-                        Email = "admin@admin.com"
-                    });
-                });
+            await DbHandler.Instance.SaveAppUserData(new AppUser
+            {
+                UserId = 1,
+                Username = "admin",
+                Password = "admin",
+                FullName = "Sonali Bank Administrator",
+                Address = "Dhaka",
+                DateOfBirth = new DateTime(1990, 1, 1),
+                Email = "admin@admin.com"
+            });
 
             MessageListener.Instance.ReceiveProgress(100);
             (LoginViewModel.View as Window).Show();

@@ -14,16 +14,9 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Category: " Margin="5" />
-            <ComboBox Grid.Row="0" Grid.Column="1" Width="150" ItemsSource="{Binding CategoryCollection}" Margin="5" />
-            <TextBlock Grid.Row="0" Grid.Column="2" Text="Hardware Tag NO: " Margin="5" />
-            <TextBox Grid.Row="0" Grid.Column="3" Text="{Binding HardwareTagNo}" />
+            <DataGrid ItemsSource="{Binding HardwareCollection, IsAsync=True}">
+                
+            </DataGrid>
         </Grid>
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Path=IsShowPopup, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
             <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.6" />

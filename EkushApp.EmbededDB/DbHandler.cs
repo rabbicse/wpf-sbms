@@ -81,7 +81,7 @@ namespace EkushApp.EmbededDB
         }
         #endregion
 
-        #region Users Operation(s)
+        #region AppUser Operation(s)
         public void SaveUserData(List<AppUser> userCollection)
         {
             try
@@ -154,6 +154,42 @@ namespace EkushApp.EmbededDB
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
                     await session.StoreAsync(hardware);
+                    await session.SaveChangesAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+        }
+        #endregion
+
+        #region User
+        public async Task SaveUser(User user)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    await session.StoreAsync(user);
+                    await session.SaveChangesAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+        }
+        #endregion
+
+        #region Hardware
+        public async Task SaveSupplier(Supplier supplier)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    await session.StoreAsync(supplier);
                     await session.SaveChangesAsync();
                 }
             }
