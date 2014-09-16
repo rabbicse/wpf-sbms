@@ -34,140 +34,140 @@
     <ViewBase:WindowBase.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding LoginCommand, Mode=OneWay}" />
     </ViewBase:WindowBase.InputBindings>
-        <Border BorderBrush="#FF0C3DA2" BorderThickness="1" Height="250" Width="450" Background="White">
+    <Border BorderBrush="#FF0C3DA2" BorderThickness="1" Height="250" Width="450" Background="White">
+        <Grid>
             <Grid>
-                <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" Height="55">
+                    <Grid.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
+                            <GradientStop Color="#FF0C3DA2" Offset="0.0" />
+                            <GradientStop Color="#FF86C5F9" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Grid.Background>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" VerticalAlignment="Center" x:Name="Logo" RenderTransformOrigin="0.5, 0.5">
+                        <StackPanel.RenderTransform>
+                            <TransformGroup>
+                                <ScaleTransform/>
+                                <SkewTransform/>
+                                <RotateTransform/>
+                                <TranslateTransform/>
+                            </TransformGroup>
+                        </StackPanel.RenderTransform>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Grid.Column="0" Source="pack://application:,,,/Images/sbms.png" VerticalAlignment="Top" Width="45" Margin="5" />
+                            <TextBlock Grid.Column="1" Margin="10,0,5,0" Text="{l:Translate ApplicationName, Mode=CAMELCASE}" VerticalAlignment="Center" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontWeight="Bold" FontSize="{fs:FontSize 18}">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </Grid>
+                    </StackPanel>
+                    <Button Grid.Column="1" Cursor="Hand" Command="{Binding CloseCommand, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,5">
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Grid Background="Transparent">
+                                    <Ellipse Stroke="White" StrokeThickness="3" Width="24" Height="24" Fill="Red" Opacity="0.7" />
+                                    <Path Data="M0,0 L1,1 M0,1 L1,0" Margin="5" Stretch="Uniform" Stroke="White" Width="12" Height="12" StrokeThickness="3" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Height="55">
-                        <Grid.Background>
-                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
-                                <GradientStop Color="#FF0C3DA2" Offset="0.0" />
-                                <GradientStop Color="#FF86C5F9" Offset="1"/>
-                            </LinearGradientBrush>
-                        </Grid.Background>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Column="0" VerticalAlignment="Center" x:Name="Logo" RenderTransformOrigin="0.5, 0.5">
-                            <StackPanel.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform/>
-                                    <SkewTransform/>
-                                    <RotateTransform/>
-                                    <TranslateTransform/>
-                                </TransformGroup>
-                            </StackPanel.RenderTransform>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <ItemsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 5" x:Name="lan" ItemsSource="{Binding CultureCollection}" HorizontalAlignment="Right" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.Resources>
+                            <DataTemplate DataType="{x:Type lContracts:CultureBean}">
+                                <Grid VerticalAlignment="Center">
+                                    <RadioButton Margin="5" TabIndex="2" Cursor="Hand" GroupName="Language" VerticalContentAlignment="Center" Content="{Binding CultureName, Mode=OneWay}" IsChecked="{Binding IsChecked}" FontFamily="{Binding CultureFont}" FontWeight="Bold">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="Checked">
+                                                <Interactivity:EventToCommandTrigger Command="{Binding DataContext.CheckedLanguageCommand, RelativeSource= {RelativeSource FindAncestor,
+                                AncestorType={x:Type ItemsControl}}, Mode=OneWay}" CommandParameter="{Binding Path=CultureCode}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                    </RadioButton>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.Resources>
+                    </ItemsControl>
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="{l:Translate Username, '{}{0}:', Mode=CAMELCASE}" FontFamily="{f:FontFamily}" FontWeight="Bold" Foreground="Black" FontSize="{fs:FontSize 12}" Grid.Row="1" Grid.Column="0" Margin="5" />
+                    <TextBox VerticalContentAlignment="Center" x:Name="txtUser" FontFamily="{f:FontFamily}" Text="{Binding Username}" FontWeight="Bold" Width="200" Height="25" FontSize="12" Grid.Row="1" Grid.Column="1" Margin="5" />
+                    <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="{l:Translate Password, '{}{0}:', Mode=CAMELCASE}" FontFamily="{f:FontFamily}" Foreground="Black" FontWeight="Bold" FontSize="{fs:FontSize 12}" Grid.Row="2" Grid.Column="0" Margin="5" />
+                    <PasswordBox FontFamily="{f:FontFamily}" wpfHelper:PasswordHelper.Attach="True" wpfHelper:PasswordHelper.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="5" Width="200" Height="25" VerticalContentAlignment="Center" FontWeight="Bold" FontSize="12" />
+
+                    <!--<Button Grid.Row="3" Grid.Column="0" Cursor="Hand" Command="{Binding ConfigureCommand}" Content="Configure" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="150" Height="25" BorderBrush="{x:Null}" FontFamily="{f:FontFamily}" FontSize="12" FontWeight="Bold" />-->
+                    <Button Grid.Row="3" Grid.Column="1" Cursor="Hand" Command="{Binding LoginCommand}" Content="{l:Translate Login}" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="150" Height="25" BorderBrush="{x:Null}" FontFamily="{f:FontFamily}" FontSize="12" FontWeight="Bold" />
+                </Grid>
+                <StatusBar Grid.Row="2">
+                    <StatusBar.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
+                            <GradientStop Color="#FF86C5F9" Offset="0.0"/>
+                            <GradientStop Color="#FF0C3DA2" Offset="1" />
+                        </LinearGradientBrush>
+                    </StatusBar.Background>
+                    <StatusBar.ItemsPanel>
+                        <ItemsPanelTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-                                <Image Grid.Column="0" Source="pack://application:,,,/Images/sbms.png" VerticalAlignment="Top" Width="45" Margin="5" />
-                                <TextBlock Grid.Column="1" Margin="10,0,5,0" Text="{l:Translate ApplicationName, Mode=CAMELCASE}" VerticalAlignment="Center" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontWeight="Bold" FontSize="{fs:FontSize 18}">
-                                    <TextBlock.Effect>
-                                        <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
-                                    </TextBlock.Effect>
-                                </TextBlock>
                             </Grid>
-                        </StackPanel>
-                        <Button Grid.Column="1" Cursor="Hand" Command="{Binding CloseCommand, Mode=OneWay}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,5,0">
-                            <Button.Template>
-                                <ControlTemplate>
-                                    <Grid Background="Transparent">
-                                        <Ellipse Stroke="White" StrokeThickness="3" Width="24" Height="24" Fill="Black" />
-                                        <Path Data="M0,0 L1,1 M0,1 L1,0" Margin="5" Stretch="Uniform" Stroke="White" Width="12" Height="12" StrokeThickness="3" />
-                                    </Grid>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
-                    </Grid>
-
-                    <Grid Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto" />
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
-                        <ItemsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 5" x:Name="lan" ItemsSource="{Binding CultureCollection}" HorizontalAlignment="Right" >
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <WrapPanel Orientation="Horizontal" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.Resources>
-                                <DataTemplate DataType="{x:Type lContracts:CultureBean}">
-                                    <Grid VerticalAlignment="Center">
-                                        <RadioButton Margin="5" TabIndex="2" Cursor="Hand" GroupName="Language" VerticalContentAlignment="Center" Content="{Binding CultureName, Mode=OneWay}" IsChecked="{Binding IsChecked}" FontFamily="{Binding CultureFont}" FontWeight="Bold">
-                                            <i:Interaction.Triggers>
-                                                <i:EventTrigger EventName="Checked">
-                                                    <Interactivity:EventToCommandTrigger Command="{Binding DataContext.CheckedLanguageCommand, RelativeSource= {RelativeSource FindAncestor,
-                                AncestorType={x:Type ItemsControl}}, Mode=OneWay}" CommandParameter="{Binding Path=CultureCode}" />
-                                                </i:EventTrigger>
-                                            </i:Interaction.Triggers>
-                                        </RadioButton>
-                                    </Grid>
-                                </DataTemplate>
-                            </ItemsControl.Resources>
-                        </ItemsControl>
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="{l:Translate Username, '{}{0}:', Mode=CAMELCASE}" FontFamily="{f:FontFamily}" FontWeight="Bold" Foreground="Black" FontSize="{fs:FontSize 12}" Grid.Row="1" Grid.Column="0" Margin="5" />
-                        <TextBox VerticalContentAlignment="Center" x:Name="txtUser" FontFamily="{f:FontFamily}" Text="{Binding Username}" FontWeight="Bold" Width="200" Height="25" FontSize="12" Grid.Row="1" Grid.Column="1" Margin="5" />
-                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="{l:Translate Password, '{}{0}:', Mode=CAMELCASE}" FontFamily="{f:FontFamily}" Foreground="Black" FontWeight="Bold" FontSize="{fs:FontSize 12}" Grid.Row="2" Grid.Column="0" Margin="5" />
-                        <PasswordBox FontFamily="{f:FontFamily}" wpfHelper:PasswordHelper.Attach="True" wpfHelper:PasswordHelper.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="1" Margin="5" Width="200" Height="25" VerticalContentAlignment="Center" FontWeight="Bold" FontSize="12" />
-
-                        <!--<Button Grid.Row="3" Grid.Column="0" Cursor="Hand" Command="{Binding ConfigureCommand}" Content="Configure" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="150" Height="25" BorderBrush="{x:Null}" FontFamily="{f:FontFamily}" FontSize="12" FontWeight="Bold" />-->
-                        <Button Grid.Row="3" Grid.Column="1" Cursor="Hand" Command="{Binding LoginCommand}" Content="{l:Translate Login}" HorizontalAlignment="Left" Margin="5,5,0,0" VerticalAlignment="Top" Width="150" Height="25" BorderBrush="{x:Null}" FontFamily="{f:FontFamily}" FontSize="12" FontWeight="Bold" />
-                    </Grid>
-                    <StatusBar Grid.Row="2">
-                        <StatusBar.Background>
-                            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
-                                <GradientStop Color="#FF86C5F9" Offset="0.0"/>
-                                <GradientStop Color="#FF0C3DA2" Offset="1" />
-                            </LinearGradientBrush>
-                        </StatusBar.Background>
-                        <StatusBar.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                </Grid>
-                            </ItemsPanelTemplate>
-                        </StatusBar.ItemsPanel>
-                        <StatusBarItem Grid.Column="2" Height="30" HorizontalContentAlignment="Right">
-                            <WrapPanel>
-                                <TextBlock Margin="5,2,5,2" Text="{l:Translate Version}" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontSize="{fs:FontSize 11}" FontWeight="Black">
-                                    <TextBlock.Effect>
-                                        <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
-                                    </TextBlock.Effect>
-                                </TextBlock>
-                                <TextBlock Margin="5,2,5,2" Text="{Binding Version}" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontSize="{fs:FontSize 11}" FontWeight="Black">
-                                    <TextBlock.Effect>
-                                        <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
-                                    </TextBlock.Effect>
-                                </TextBlock>
-                            </WrapPanel>
-                        </StatusBarItem>
-                    </StatusBar>
-                </Grid>
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Path=IsShowPopup, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
-                    <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.6" />
-                    <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
-                        <ContentControl Content="{Binding PopupContent, Mode=OneWay}" />
-                    </DockPanel>
-                </Grid>
+                        </ItemsPanelTemplate>
+                    </StatusBar.ItemsPanel>
+                    <StatusBarItem Grid.Column="2" Height="30" HorizontalContentAlignment="Right">
+                        <WrapPanel>
+                            <TextBlock Margin="5,2,5,2" Text="{l:Translate Version}" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontSize="{fs:FontSize 11}" FontWeight="Black">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
+                                </TextBlock.Effect>
+                            </TextBlock>
+                            <TextBlock Margin="5,2,5,2" Text="{Binding Version}" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontSize="{fs:FontSize 11}" FontWeight="Black">
+                                <TextBlock.Effect>
+                                    <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />
+                                </TextBlock.Effect>
+                            </TextBlock>
+                        </WrapPanel>
+                    </StatusBarItem>
+                </StatusBar>
             </Grid>
-        </Border>
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Path=IsShowPopup, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.6" />
+                <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                    <ContentControl Content="{Binding PopupContent, Mode=OneWay}" />
+                </DockPanel>
+            </Grid>
+        </Grid>
+    </Border>
 </ViewBase:WindowBase>
 

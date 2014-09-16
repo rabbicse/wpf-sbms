@@ -71,7 +71,7 @@ namespace EkushApp.EmbededDB
         public DbHandler()
         {
             IndexCreation.CreateIndexes(typeof(AppUserMapReduceIndex).Assembly, DocumentStore);
-            IndexCreation.CreateIndexes(typeof(HardwareMapReduceIndex).Assembly, DocumentStore);
+            IndexCreation.CreateIndexes(typeof(HardwareMapIndex).Assembly, DocumentStore);
             IndexCreation.CreateIndexes(typeof(SupplierMapReduceIndex).Assembly, DocumentStore);
             IndexCreation.CreateIndexes(typeof(UserMapReduceIndex).Assembly, DocumentStore);
         }
@@ -153,6 +153,23 @@ namespace EkushApp.EmbededDB
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
+                    session.Advanced.UseOptimisticConcurrency = true;
+                    await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("HardwareMapIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = "SerialNo: " + hardware.SerialNo
+                                                    }, false);
+                    var maxIds = await session.Advanced.AsyncLuceneQuery<Hardware>("HardwareMapIndex")
+                        .WaitForNonStaleResultsAsOfLastWrite().OrderByDescending(p => p.SerialNo).ToListAsync();
+                    if (maxIds != null && maxIds.Count > 0)
+                    {
+                        var maxId = maxIds.Select(id => (long)id.SerialNo).Max();
+                        hardware.SerialNo = maxId + 1;
+                    }
+                    else
+                    {
+                        hardware.SerialNo = 1;
+                    }
                     await session.StoreAsync(hardware);
                     await session.SaveChangesAsync();
                 }
@@ -160,6 +177,46 @@ namespace EkushApp.EmbededDB
             catch (Exception x)
             {
                 Log.Error("Error when save hardware.", x);
+            }
+        }
+        public async Task<List<Hardware>> GetHardwareCollection()
+        {
+            List<Hardware> hardwareBag = new List<Hardware>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var hardWares = await session.Advanced.AsyncLuceneQuery<Hardware>("HardwareMapIndex")
+                        .WaitForNonStaleResultsAsOfLastWrite().OrderBy(p => p.SerialNo).ToListAsync();
+                    if (hardWares != null && hardWares.Count > 0)
+                    {
+                        hardwareBag.AddRange(hardWares);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return hardwareBag;
+        }
+        public async Task DeleteHardware(Hardware hardware)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var delOperation = await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("HardwareMapIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = "SerialNo: " + hardware.SerialNo
+                                                    }, false);
+                    await delOperation.WaitForCompletionAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when delete hardware.", x);
             }
         }
         #endregion
@@ -171,6 +228,22 @@ namespace EkushApp.EmbededDB
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
+                    await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("UserMapReduceIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = "Id: " + user.Id
+                                                    }, false);
+                    var maxIds = await session.Advanced.AsyncLuceneQuery<User>("UserMapReduceIndex")
+                        .WaitForNonStaleResultsAsOfLastWrite().OrderByDescending(p => p.Id).ToListAsync();
+                    if (maxIds != null && maxIds.Count > 0)
+                    {
+                        var maxId = maxIds.Select(id => (long)id.Id).Max();
+                        user.Id = maxId + 1;
+                    }
+                    else
+                    {
+                        user.Id = 1;
+                    }
                     await session.StoreAsync(user);
                     await session.SaveChangesAsync();
                 }
@@ -180,9 +253,49 @@ namespace EkushApp.EmbededDB
                 Log.Error("Error when save hardware.", x);
             }
         }
+        public async Task<List<User>> GetUserCollection()
+        {
+            List<User> hardwareBag = new List<User>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var hardWares = await session.Advanced.AsyncLuceneQuery<User>("UserMapReduceIndex")
+                        .WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    if (hardWares != null && hardWares.Count > 0)
+                    {
+                        hardwareBag.AddRange(hardWares);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return hardwareBag;
+        }
+        public async Task DeleteUser(User user)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var delOperation = await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("UserMapReduceIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = "Id: " + user.Id
+                                                    }, false);
+                    await delOperation.WaitForCompletionAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when delete hardware.", x);
+            }
+        }
         #endregion
 
-        #region Hardware
+        #region Supplier
         public async Task SaveSupplier(Supplier supplier)
         {
             try
@@ -196,6 +309,46 @@ namespace EkushApp.EmbededDB
             catch (Exception x)
             {
                 Log.Error("Error when save hardware.", x);
+            }
+        }
+        public async Task<List<Supplier>> GetSupplierCollection()
+        {
+            List<Supplier> hardwareBag = new List<Supplier>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var hardWares = await session.Advanced.AsyncLuceneQuery<Supplier>("SupplierMapReduceIndex")
+                        .WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    if (hardWares != null && hardWares.Count > 0)
+                    {
+                        hardwareBag.AddRange(hardWares);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return hardwareBag;
+        }
+        public async Task DeleteSupplier(Supplier supplier)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var delOperation = await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("SupplierMapReduceIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = "Id: " + supplier.Id
+                                                    }, false);
+                    await delOperation.WaitForCompletionAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when delete hardware.", x);
             }
         }
         #endregion
@@ -223,6 +376,6 @@ namespace EkushApp.EmbededDB
         {
             if (!disposing) return;
         }
-        #endregion
+        #endregion                
     }
 }

@@ -25,12 +25,13 @@ namespace EkushApp.Model
     }
     public class Hardware
     {
-        public HardwareCategory Category { get; set; }
-        public string HardwareTagNo { get; set; }
-        public string BrandName { get; set; }
-        public string Model { get; set; }
         [UniqueConstraint]
         public long SerialNo { get; set; }
+        public HardwareCategory Category { get; set; }
+        [UniqueConstraint]
+        public string HardwareTagNo { get; set; }
+        public string BrandName { get; set; }
+        public string Model { get; set; }        
         public DateTime? ReceiveDate { get; set; }
         public HardwareStatus Status { get; set; }
         public string Comments { get; set; }

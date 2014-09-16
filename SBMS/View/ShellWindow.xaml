@@ -28,9 +28,14 @@
         </EventTrigger>
     </ViewBase:WindowBase.Triggers>
     <Border BorderBrush="#FF0C3DA2" BorderThickness="1" Margin="5">
+        <Border.Background>
+            <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
+                <GradientStop Color="#b0bfc8" Offset="0.0" />
+                <GradientStop Color="#d4d6d9" Offset="1"/>
+            </LinearGradientBrush>
+        </Border.Background>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -61,14 +66,22 @@
                     </TextBlock.Effect>
                 </TextBlock>
                 <StackPanel Grid.Column="3" Orientation="Horizontal">
-                    <Button Content="Logout" Cursor="Hand" HorizontalAlignment="Left" Width="100" Height="20" FontWeight="Bold" Command="{Binding LogoutCommand, Mode=OneWay}" Margin="5,5,5,5" />
+                    <Button Cursor="Hand" ToolTip="Logout" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" Command="{Binding LogoutCommand, Mode=OneWay}" Margin="5,5,5,5" >
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Grid>
+                                    <Image Source="pack://application:,,,/Images/logout.png" Width="24" Height="24" Stretch="Uniform" />
+                                </Grid>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </StackPanel>
             </Grid>
 
             <!-- Main Content -->
-            <Grid Grid.Row="2">
+            <Grid Grid.Row="1" Margin="0,10,0,0">
                 <!--<ContentControl Content="{Binding MainContent, Mode=OneWay, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" />-->
-                <TabControl ItemsSource="{Binding TabCollection}" SelectedItem="{Binding SelectedTab}">
+                <TabControl ItemsSource="{Binding TabCollection}" SelectedItem="{Binding SelectedTab}" Background="Transparent">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Tag}" />
@@ -83,7 +96,7 @@
             </Grid>
 
             <!-- Footer -->
-            <StatusBar Grid.Row="3">
+            <StatusBar Grid.Row="2">
                 <StatusBar.Background>
                     <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1" >
                         <GradientStop Color="#FF86C5F9" Offset="0.0"/>
@@ -97,11 +110,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Administrator" FontSize="12" Foreground="GhostWhite" FontWeight="Bold" MaxWidth="200" TextTrimming="CharacterEllipsis">
+                        <!--<TextBlock Grid.Column="0" VerticalAlignment="Center" HorizontalAlignment="Left" Text="Administrator" FontSize="12" Foreground="GhostWhite" FontWeight="Bold" MaxWidth="200" TextTrimming="CharacterEllipsis">
                             <TextBlock.Effect>
                                 <DropShadowEffect Direction="315" Color="#FF0C3DA2" ShadowDepth="3" />
                             </TextBlock.Effect>
-                        </TextBlock>
+                        </TextBlock>-->
                         <TextBlock Grid.Column="1" Margin="5,2,5,2" Text="{l:Translate Version}" FontFamily="{f:FontFamily}" Foreground="GhostWhite" FontSize="{fs:FontSize 11}" FontWeight="Black">
                             <TextBlock.Effect>
                                 <DropShadowEffect Direction="320" Color="#FF0C3DA2" ShadowDepth="5" />

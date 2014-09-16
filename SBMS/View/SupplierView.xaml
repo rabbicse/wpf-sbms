@@ -3,8 +3,89 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService">
+             xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"
+             xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls"
+             xmlns:appConverter="clr-namespace:SBMS.Infrastructure.Converter;assembly=SBMS.Infrastructure"
+             xmlns:controls="clr-namespace:EkushApp.WpfControls.Controls;assembly=EkushApp.WpfControls">
+    <ViewBase:UserControlBase.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <appConverter:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+    </ViewBase:UserControlBase.Resources>
     <Grid>
-        <TextBlock Text="Supplier" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="1" Margin="10, 10, 20, 20">
+                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" Background="White" Opacity="0.5" BorderBrush="White" CornerRadius="12" BorderThickness="2">
+                    <Border.Effect>
+                        <DropShadowEffect Direction="320" ShadowDepth="10" BlurRadius="20" Color="Green" />
+                    </Border.Effect>
+                </Border>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="0" Margin="10, 10, 10, 0">
+                        <Button Content="New Hardware" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewHardwareCommand, IsAsync=True}" />
+                    </WrapPanel>
+                    <ListView Grid.Row="1" ItemsSource="{Binding SupplierCollection, IsAsync=True}" SelectedItem="{Binding SelectedUser}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="User">
+                                <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding Path=Name}" Width="100"/>
+                                <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Path=Address}" Width="100"/>
+                                <GridViewColumn Header="Contact Person" DisplayMemberBinding="{Binding Path=ContactPersonName}" Width="100"/>
+                                <GridViewColumn Header="Contact Mobile NO." DisplayMemberBinding="{Binding Path=ContactMobileNo}" Width="120"/>
+                                <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="150"/>
+                                <GridViewColumn Header="Actions">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition  Width="Auto"/>
+                                                    <ColumnDefinition  Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Button Grid.Column="0" Cursor="Hand" Command="{Binding Path=DataContext.EditHardwareCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                                                        CommandParameter="{Binding}">
+                                                    <Button.Template>
+                                                        <ControlTemplate>
+                                                            <Grid Background="#01FFFFFF" MinWidth="24" MinHeight="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <Path Data="M3.6943,11.9199L4.1323,9.5549C4.1443,9.4019,4.1953,9.2459,4.2973,9.1289L9.4233,4.0049L11.8853,6.4669L6.7593,11.5919C6.7043,11.6469,6.4893,11.7749,6.4183,11.7869L4.0083,12.2339C3.7943,12.2749,3.6533,12.1349,3.6943,11.9199 M4.8903,11.4789L6.2383,11.2519L10.9273,6.5619L10.3673,6.0059L5.7093,10.6679L4.8153,9.7169L4.5693,11.1329C4.7253,11.1989,4.8253,11.3219,4.8903,11.4789 M12.4513,5.9019L9.9893,3.4399L10.7863,2.6439C11.0063,2.4229,11.3643,2.4229,11.5853,2.6439L13.2483,4.3069C13.4683,4.5269,13.4683,4.8849,13.2483,5.1059z" 
+							          Fill="#FF333333" Stretch="Fill" Width="12" Height="12" />
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                                <Button Grid.Column="1" Cursor="Hand" Command="{Binding Path=DataContext.DeleteHardwareCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                                                        CommandParameter="{Binding}">
+                                                    <Button.Template>
+                                                        <ControlTemplate>
+                                                            <Grid Background="#01FFFFFF" MinWidth="24" MinHeight="20" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                                <Path Data="M1,1.0920105 L10.875,10.873011 M10.905006,1 L9.9050312,2.0619726 L1.0460064,10.921" 
+								      Stroke="#FF333333" StrokeThickness="2" RenderTransformOrigin="0.5,0.5" Stretch="Fill" Width="12" Height="12" VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Button.Template>
+                                                </Button>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Path=IsShowPopup, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.6" />
+            <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                <ContentControl Content="{Binding PopupContent, Mode=OneWay}" />
+            </DockPanel>
+        </Grid>
     </Grid>
 </ViewBase:UserControlBase>

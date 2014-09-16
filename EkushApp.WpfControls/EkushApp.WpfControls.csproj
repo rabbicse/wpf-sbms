@@ -52,6 +52,7 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\AnimatedTabControl.cs" />
     <Compile Include="Controls\DigitOnlyTextBox.cs" />
     <Compile Include="Controls\LoadingIndicator.cs" />
     <Compile Include="Controls\MetroProgressBar.cs" />

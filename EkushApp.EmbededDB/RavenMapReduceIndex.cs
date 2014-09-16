@@ -20,9 +20,9 @@ namespace EkushApp.EmbededDB
                            };
         }
     }
-    public class HardwareMapReduceIndex : AbstractIndexCreationTask<Hardware>
+    public class HardwareMapIndex : AbstractIndexCreationTask<Hardware>
     {
-        public HardwareMapReduceIndex() 
+        public HardwareMapIndex()
         {
             Map = hardwares => from hardware in hardwares
                                select new
@@ -32,6 +32,7 @@ namespace EkushApp.EmbededDB
                                };
         }
     }
+    
     public class UserMapReduceIndex : AbstractIndexCreationTask<User>
     {
         public UserMapReduceIndex()
@@ -39,6 +40,7 @@ namespace EkushApp.EmbededDB
             Map = users => from user in users
                            select new
                            {
+                               user.Id,
                                user.Name
                            };
         }
@@ -48,10 +50,11 @@ namespace EkushApp.EmbededDB
         public SupplierMapReduceIndex()
         {
             Map = suppliers => from supplier in suppliers
-                           select new
-                           {
-                               supplier.Name
-                           };
+                               select new
+                               {
+                                   supplier.Id,
+                                   supplier.Name
+                               };
         }
     }
 }

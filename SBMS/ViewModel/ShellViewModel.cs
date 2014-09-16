@@ -16,6 +16,7 @@ using EkushApp.Utility.Tasks;
 using EkushApp.Utility.WinRegistry;
 using SBMS.View;
 using EkushApp.ShellService.Commands;
+using SBMS.Infrastructure;
 
 namespace SBMS.ViewModel
 {
@@ -33,6 +34,16 @@ namespace SBMS.ViewModel
         #endregion
 
         #region Property(s)
+        private string _version;
+        public string Version
+        {
+            get { return _version; }
+            set
+            {
+                _version = value;
+                OnPropertyChanged(() => Version);
+            }
+        }
         private Lazy<OptimizedObservableCollection<IViewModel>> _tabCollection;
         public OptimizedObservableCollection<IViewModel> TabCollection
         {
@@ -120,6 +131,7 @@ namespace SBMS.ViewModel
         #region ViewModelBase
         public override void OnLoad()
         {
+            Version = Globals.Assembly.EXE_VERSION;
             TabCollection.Add(HardwareVM);
             TabCollection.Add(UserVM);
             TabCollection.Add(SupplierVM);
