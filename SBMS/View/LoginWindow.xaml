@@ -98,7 +98,7 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
-                    <ItemsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 5" x:Name="lan" ItemsSource="{Binding CultureCollection}" HorizontalAlignment="Right" >
+                    <!--<ItemsControl Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="10 5 10 5" x:Name="lan" ItemsSource="{Binding CultureCollection}" HorizontalAlignment="Right" >
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <WrapPanel Orientation="Horizontal" />
@@ -118,7 +118,7 @@
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.Resources>
-                    </ItemsControl>
+                    </ItemsControl>-->
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="{l:Translate Username, '{}{0}:', Mode=CAMELCASE}" FontFamily="{f:FontFamily}" FontWeight="Bold" Foreground="Black" FontSize="{fs:FontSize 12}" Grid.Row="1" Grid.Column="0" Margin="5" />
                     <TextBox VerticalContentAlignment="Center" x:Name="txtUser" FontFamily="{f:FontFamily}" Text="{Binding Username}" FontWeight="Bold" Width="200" Height="25" FontSize="12" Grid.Row="1" Grid.Column="1" Margin="5" />
                     <TextBlock VerticalAlignment="Center" HorizontalAlignment="Right" Text="{l:Translate Password, '{}{0}:', Mode=CAMELCASE}" FontFamily="{f:FontFamily}" Foreground="Black" FontWeight="Bold" FontSize="{fs:FontSize 12}" Grid.Row="2" Grid.Column="0" Margin="5" />

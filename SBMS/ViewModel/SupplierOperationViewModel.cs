@@ -119,8 +119,8 @@ namespace SBMS.ViewModel
             Address = supplier.Address;
             ContactMobileNo = supplier.ContactMobileNo;
             ContactPersonName = supplier.ContactPersonName;
-            CurrentHardware = supplier.SupplyHardware;
-            Comments = Comments;
+            CurrentHardware = Hardwares.Where(h => h.SerialNo == supplier.SupplyHardware.SerialNo).FirstOrDefault();
+            Comments = supplier.Comments;
         }
         #endregion
 

@@ -79,9 +79,9 @@
             </Grid>
 
             <!-- Main Content -->
-            <Grid Grid.Row="1" Margin="0,10,0,0">
+            <Grid Grid.Row="1" Margin="0,10,0,0">                
                 <!--<ContentControl Content="{Binding MainContent, Mode=OneWay, IsAsync=True, UpdateSourceTrigger=PropertyChanged}" />-->
-                <TabControl ItemsSource="{Binding TabCollection}" SelectedItem="{Binding SelectedTab}" Background="Transparent">
+                <TabControl ItemsSource="{Binding TabCollection}" BorderThickness="0" SelectedItem="{Binding SelectedTab}" Background="Transparent">
                     <TabControl.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Tag}" />
@@ -92,7 +92,7 @@
                             <ContentControl Content="{Binding View, IsAsync=True}" />
                         </DataTemplate>
                     </TabControl.ContentTemplate>
-                </TabControl>
+                </TabControl>                
             </Grid>
 
             <!-- Footer -->

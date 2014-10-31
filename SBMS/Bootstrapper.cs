@@ -64,7 +64,7 @@ namespace SBMS
             // Setting up culture            
             LocaleManager.SetLocaleAssembly("SBMS.Infrastructure.Properties.Resources", Assembly.Load("SBMS.Infrastructure"));
             LocaleManager.SetApplicationCultures(CultureNames.BANGLA, CultureNames.ENGLISH);
-            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("bn-BD");
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("en-US");
 
             // Start splash screen at startup
             Splasher.SplashWindow = new SplashWindow();

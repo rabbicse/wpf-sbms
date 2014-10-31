@@ -98,6 +98,18 @@ namespace SBMS.ViewModel
                 return _supplierVM;
             }
         }
+        private ReportViewModel _reportVM;
+        public ReportViewModel ReportVM
+        {
+            get
+            {
+                if (_reportVM == null)
+                {
+                    _reportVM = ShellContainer.GetExportedInstance<ReportViewModel>();
+                }
+                return _reportVM;
+            }
+        }
         #endregion
 
         #region Constructor(s)
@@ -135,6 +147,7 @@ namespace SBMS.ViewModel
             TabCollection.Add(HardwareVM);
             TabCollection.Add(UserVM);
             TabCollection.Add(SupplierVM);
+            TabCollection.Add(ReportVM);
             SelectedTab = TabCollection.FirstOrDefault();
         }
 
