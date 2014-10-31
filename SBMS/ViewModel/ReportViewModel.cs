@@ -94,6 +94,7 @@ namespace SBMS.ViewModel
                              };
 
                 HardwareCollection.AddRange(report);
+                ActiveHardwareCollection.AddRange(hardwares.Where(h => h.Status == HardwareStatus.RUNNING));
             }
             catch (Exception x)
             {
