@@ -119,7 +119,7 @@ namespace SBMS.ViewModel
             Address = supplier.Address;
             ContactMobileNo = supplier.ContactMobileNo;
             ContactPersonName = supplier.ContactPersonName;
-            CurrentHardware = Hardwares.Where(h => h.SerialNo == supplier.SupplyHardware.SerialNo).FirstOrDefault();
+            CurrentHardware = Hardwares.Where(h => h.SerialNo == supplier.HardwareSerial).FirstOrDefault();
             Comments = supplier.Comments;
         }
         #endregion
@@ -141,7 +141,7 @@ namespace SBMS.ViewModel
                 Address = Address,
                 ContactMobileNo = ContactMobileNo,
                 ContactPersonName = ContactPersonName,
-                SupplyHardware = CurrentHardware,
+                HardwareSerial = CurrentHardware.SerialNo,
                 Comments = Comments
             };
             await DbHandler.Instance.SaveSupplier(supplier);

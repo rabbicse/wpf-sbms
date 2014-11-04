@@ -17,6 +17,7 @@ using EkushApp.Utility.WinRegistry;
 using SBMS.View;
 using EkushApp.ShellService.Commands;
 using SBMS.Infrastructure;
+using EkushApp.Model;
 
 namespace SBMS.ViewModel
 {
@@ -24,6 +25,10 @@ namespace SBMS.ViewModel
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class ShellViewModel : ViewModelBase
     {
+        #region Declaration(s)
+        private AppUser _appUser;
+        #endregion
+
         #region Command(s)
         public CommandHandler<object, object> LogoutCommand { get; private set; }
         #endregion
@@ -67,11 +72,7 @@ namespace SBMS.ViewModel
         {
             get
             {
-                if (_hardwareVM == null)
-                {
-                    _hardwareVM = ShellContainer.GetExportedInstance<HardwareViewModel>();
-                }
-                return _hardwareVM;
+                return _hardwareVM ?? ShellContainer.GetExportedInstance<HardwareViewModel>();
             }
         }
         private UserViewModel _userVM;
@@ -79,11 +80,7 @@ namespace SBMS.ViewModel
         {
             get
             {
-                if (_userVM == null)
-                {
-                    _userVM = ShellContainer.GetExportedInstance<UserViewModel>();
-                }
-                return _userVM;
+                return _userVM ?? ShellContainer.GetExportedInstance<UserViewModel>();
             }
         }
         private SupplierViewModel _supplierVM;
@@ -91,11 +88,15 @@ namespace SBMS.ViewModel
         {
             get
             {
-                if (_supplierVM == null)
-                {
-                    _supplierVM = ShellContainer.GetExportedInstance<SupplierViewModel>();
-                }
-                return _supplierVM;
+                return _supplierVM ?? ShellContainer.GetExportedInstance<SupplierViewModel>();
+            }
+        }
+        private AppUserViewModel _appuserVM;
+        public AppUserViewModel AppuserVM
+        {
+            get
+            {
+                return _appuserVM ?? ShellContainer.GetExportedInstance<AppUserViewModel>();
             }
         }
         private ReportViewModel _reportVM;
@@ -103,11 +104,7 @@ namespace SBMS.ViewModel
         {
             get
             {
-                if (_reportVM == null)
-                {
-                    _reportVM = ShellContainer.GetExportedInstance<ReportViewModel>();
-                }
-                return _reportVM;
+                return _reportVM ?? ShellContainer.GetExportedInstance<ReportViewModel>();
             }
         }
         #endregion
@@ -123,6 +120,10 @@ namespace SBMS.ViewModel
             ShellService = shellService;
             LogoutCommand = new CommandHandler<object, object>(LogoutCommandAction);
             _tabCollection = new Lazy<OptimizedObservableCollection<IViewModel>>();
+        }
+        public void PrepareView(AppUser appUser)
+        {
+            _appUser = appUser;
         }
         #endregion
 
@@ -144,6 +145,10 @@ namespace SBMS.ViewModel
         public override void OnLoad()
         {
             Version = Globals.Assembly.EXE_VERSION;
+            if (_appUser != null && _appUser.RoleId == Role.ADMIN)
+            {
+                TabCollection.Add(AppuserVM);
+            }
             TabCollection.Add(HardwareVM);
             TabCollection.Add(UserVM);
             TabCollection.Add(SupplierVM);

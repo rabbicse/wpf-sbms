@@ -10,6 +10,7 @@ using SBMS.View;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,6 +23,10 @@ namespace SBMS.ViewModel
     {
         #region CommandHandler(s)
         public CommandHandler<object, object> PrintHWReportCommand { get; private set; }
+        public CommandHandler<object, object> PrintRunningHWCommand { get; private set; }
+        public CommandHandler<object, object> PrintInactiveHWCommand { get; private set; }
+        public CommandHandler<object, object> PrintRepairHWCommand { get; private set; }
+        public CommandHandler<object, object> PrintUserReportCommand { get; private set; }
         #endregion
 
         #region Property(s)
@@ -36,21 +41,26 @@ namespace SBMS.ViewModel
         public OptimizedObservableCollection<HardwareReport> HardwareCollection
         {
             get { return _hardwareCollection; }
-            set
-            {
-                _hardwareCollection = value;
-                OnPropertyChanged(() => HardwareCollection);
-            }
         }
         private OptimizedObservableCollection<Hardware> _activeHardwareCollection;
         public OptimizedObservableCollection<Hardware> ActiveHardwareCollection
         {
             get { return _activeHardwareCollection; }
-            set
-            {
-                _activeHardwareCollection = value;
-                OnPropertyChanged(() => ActiveHardwareCollection);
-            }
+        }
+        private OptimizedObservableCollection<Hardware> _inActiveHardwareCollection;
+        public OptimizedObservableCollection<Hardware> InActiveHardwareCollection
+        {
+            get { return _inActiveHardwareCollection; }
+        }
+        private OptimizedObservableCollection<Hardware> _inRepairHardwareCollection;
+        public OptimizedObservableCollection<Hardware> InRepairHardwareCollection
+        {
+            get { return _inRepairHardwareCollection; }
+        }
+        private OptimizedObservableCollection<UserReport> _userReportCollection;
+        public OptimizedObservableCollection<UserReport> UserReportCollection
+        {
+            get { return _userReportCollection; }
         }
         #endregion
 
@@ -60,8 +70,48 @@ namespace SBMS.ViewModel
             View = view;
             View.ViewModel = this;
             PrintHWReportCommand = new CommandHandler<object, object>(PrintHWReportCommandAction);
+            PrintRunningHWCommand = new CommandHandler<object, object>(PrintRunningHWCommandAction);
+            PrintInactiveHWCommand = new CommandHandler<object, object>(PrintInactiveHWCommandAction);
+            PrintRepairHWCommand = new CommandHandler<object, object>(PrintRepairHWCommandAction);
+            PrintUserReportCommand = new CommandHandler<object, object>(PrintUserReportCommandAction);
             _hardwareCollection = new OptimizedObservableCollection<HardwareReport>();
             _activeHardwareCollection = new OptimizedObservableCollection<Hardware>();
+            _inActiveHardwareCollection = new OptimizedObservableCollection<Hardware>();
+            _inRepairHardwareCollection = new OptimizedObservableCollection<Hardware>();
+            _userReportCollection = new OptimizedObservableCollection<UserReport>();
+        }        
+
+        private void PrintRepairHWCommandAction(object obj)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Pdf File (.pdf)|*.pdf";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                ReportGenerator.CreateHardwareStatusReport(saveFileDialog.FileName, InRepairHardwareCollection);
+            }
+        }
+
+        private void PrintInactiveHWCommandAction(object obj)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Pdf File (.pdf)|*.pdf";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                ReportGenerator.CreateHardwareStatusReport(saveFileDialog.FileName, InActiveHardwareCollection);
+            }
+        }
+
+        private void PrintRunningHWCommandAction(object obj)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Pdf File (.pdf)|*.pdf";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                ReportGenerator.CreateHardwareStatusReport(saveFileDialog.FileName, ActiveHardwareCollection);
+            }
         }
 
         private void PrintHWReportCommandAction(object obj)
@@ -72,6 +122,16 @@ namespace SBMS.ViewModel
             if (saveFileDialog.ShowDialog() == true)
             {
                 ReportGenerator.CreateHardwareReport(saveFileDialog.FileName, HardwareCollection);
+            }
+        }
+        private void PrintUserReportCommandAction(object obj)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Pdf File (.pdf)|*.pdf";
+            saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                ReportGenerator.CreateUserStatusReport(saveFileDialog.FileName, UserReportCollection);
             }
         }
 
@@ -92,16 +152,34 @@ namespace SBMS.ViewModel
                                  Model = g.Key,
                                  Count = g.Count().ToString()
                              };
-
+                HardwareCollection.Clear();
                 HardwareCollection.AddRange(report);
+                ActiveHardwareCollection.Clear();
                 ActiveHardwareCollection.AddRange(hardwares.Where(h => h.Status == HardwareStatus.RUNNING));
+                InActiveHardwareCollection.Clear();
+                InActiveHardwareCollection.AddRange(hardwares.Where(h => h.Status == HardwareStatus.UN_USED));
+                InRepairHardwareCollection.Clear();
+                InRepairHardwareCollection.AddRange(hardwares.Where(h => h.Status == HardwareStatus.REPAIR_TO_TLD));
+
+                var users = await DbHandler.Instance.GetUserCollection();
+                if (users != null && users.Count > 0)
+                {
+                    var reports = from user in users
+                                  group user by user.Name into g
+                                  select new UserReport
+                                  {
+                                      UserName = g.Key,
+                                      Designation = g.First().Designation,
+                                      Department = g.First().Department,
+                                      Hardwares = g.Select(u => hardwares.FirstOrDefault(h => u.HardwareSerial == h.SerialNo)).ToList()
+                                  };
+                    UserReportCollection.AddRange(reports);
+                }
             }
             catch (Exception x)
             {
                 Log.Error("Error: ", x);
             }
-
-            //HardwareCollection.AddRange();
         }
 
         public override void OnClosing()

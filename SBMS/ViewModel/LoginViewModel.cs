@@ -18,6 +18,7 @@ using EkushApp.EmbededDB;
 using EkushApp.Utility.Crypto;
 using SBMS.Infrastructure;
 using EkushApp.Utility.WinRegistry;
+using EkushApp.Model;
 
 
 namespace SBMS.ViewModel
@@ -34,7 +35,7 @@ namespace SBMS.ViewModel
 
         #region Event(s)
         public event EventHandler OnShutdown;
-        public event Action<object> OnLoggedIn;
+        public event Action<AppUser> OnLoggedIn;
         #endregion
 
         #region Property(s)
@@ -106,7 +107,7 @@ namespace SBMS.ViewModel
         {
             View = view;
             View.ViewModel = this;
-            LoginCommand = new CommandHandler<object, object>(LoginCommandAction);        
+            LoginCommand = new CommandHandler<object, object>(LoginCommandAction);
             CloseCommand = new CommandHandler<object, object>(CloseCommandAction);
             CheckedLanguageCommand = new CommandHandler<object, object>(CheckedLanguageCommandExecute);
             var _cultureCollection = LocaleManager.DefaultCultureCollection;
@@ -114,7 +115,7 @@ namespace SBMS.ViewModel
             CultureCollection = _cultureCollection;
         }
 
-        
+
 
         private void CheckedLanguageCommandExecute(object e)
         {
@@ -127,10 +128,10 @@ namespace SBMS.ViewModel
         #region Command Manager(s)
         private async void LoginCommandAction(object obj)
         {
-            ShowBusyIndicator("Please wait...\nAuthenticating user administrator.......");
-            await Task.Run(() =>
+            ShowBusyIndicator("Please wait...\nAuthenticating user");
+            await Task.Run(async () =>
             {
-                OnLogin();
+                await OnLoginAsync();
             });
             HideBusyIndicator();
         }
@@ -146,26 +147,24 @@ namespace SBMS.ViewModel
         #endregion
 
         #region Method(s)
-        private void OnLogin()
+        private async Task OnLoginAsync()
         {
-            //ClientData.Login(Username, CryptoUtils.CreateSha1Hash(new UTF8Encoding().GetBytes(Password)));
-            //Log.Debug(string.Format("Login Credentials; User: {0} Password: {1}", Username, Password));
-            //if (DbHandler.Instance.AuthenticateUser(Username, Password))
-            //{
-            Log.Info("Successfully logged in.");
-            ViewDispatcher.Invoke((Action)(() =>
+            AppUser user = null;
+            if (await DbHandler.Instance.AuthenticateUser(Username, Password, x => user = x))
             {
-                if (null != OnLoggedIn)
+                Log.Info("Successfully logged in.");
+                ViewDispatcher.Invoke((Action)(() =>
                 {
-                    OnLoggedIn(true);
-                }
-            }));
-
-            //}
-            //else
-            //{
-            //    System.Windows.MessageBox.Show("Login failed!");
-            //}
+                    if (null != OnLoggedIn)
+                    {
+                        OnLoggedIn(user);
+                    }
+                }));
+            }
+            else
+            {
+                System.Windows.MessageBox.Show("Login failed!");
+            }
         }
         private void OnClose()
         {

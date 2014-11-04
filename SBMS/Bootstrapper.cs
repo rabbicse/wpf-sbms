@@ -76,16 +76,19 @@ namespace SBMS
             DbHandler.DatabasePath = Globals.EmbededDB.DB_PATH;
 
             // TODO TEST, Here we'll delete dirty records etc. before start
-            await DbHandler.Instance.SaveAppUserData(new AppUser
+            var users = await DbHandler.Instance.GetUsers();
+            if (users == null || users.Count == 0)
             {
-                UserId = 1,
-                Username = "admin",
-                Password = "admin",
-                FullName = "Sonali Bank Administrator",
-                Address = "Dhaka",
-                DateOfBirth = new DateTime(1990, 1, 1),
-                Email = "admin@admin.com"
-            });
+                await DbHandler.Instance.SaveAppUserData(new AppUser
+                {
+                    Username = "admin",
+                    Password = "admin",
+                    FullName = "Sonali Bank Administrator",
+                    Email = "admin@admin.com",
+                    MobileNo = "880",
+                    RoleId = Role.ADMIN
+                });
+            }
 
             MessageListener.Instance.ReceiveProgress(100);
             (LoginViewModel.View as Window).Show();
@@ -123,9 +126,10 @@ namespace SBMS
             }
         }
 
-        private void LoginViewModel_OnLoggedIn(object obj)
+        private void LoginViewModel_OnLoggedIn(AppUser appUser)
         {
             OnCloseLoginViewModel();
+            ShellViewModel.PrepareView(appUser);
             (ShellViewModel.View as Window).Show();
         }
         private void OnCloseLoginViewModel()

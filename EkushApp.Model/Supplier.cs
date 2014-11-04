@@ -15,7 +15,7 @@ namespace EkushApp.Model
         public string Address { get; set; }
         public string ContactPersonName { get; set; }
         public string ContactMobileNo { get; set; }
-        public Hardware SupplyHardware { get; set; }
+        public long HardwareSerial { get; set; }
         public string Comments { get; set; }
     }
 }

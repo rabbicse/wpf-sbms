@@ -82,43 +82,40 @@ namespace EkushApp.EmbededDB
         #endregion
 
         #region AppUser Operation(s)
-        public void SaveUserData(List<AppUser> userCollection)
-        {
-            try
-            {
-                using (var bulkInsert = DocumentStore.BulkInsert())
-                {
-                    userCollection.AsParallel().ForAll(p => bulkInsert.Store(p));
-                }
-            }
-            catch (Exception x)
-            {
-                Log.Error("Error when saving user data.", x);
-            }
-        }
-        public async Task SaveAppUserData(AppUser user)
+        public async Task<bool> SaveAppUserData(AppUser user)
         {
             try
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
+                    await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("AppUserMapReduceIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = "Username:" + user.Username
+                                                    }, false);
                     await session.StoreAsync(user);
                     await session.SaveChangesAsync();
+                    return true;
                 }
             }
             catch (Exception x)
             {
                 Log.Error("Error when save user data.", x);
             }
+            return false;
         }
-        public async Task<bool> AuthenticateUser(string username, string password)
+        public async Task<bool> AuthenticateUser(string username, string password, Action<AppUser> appUser)
         {
             try
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var response = await session.Advanced.AsyncLuceneQuery<AppUser>("AppUserMapReduceIndex").Where("Username: " + username).WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
-                    return response != null && response.Any(p => p.Password.Equals(password));
+                    var response = await session.Advanced.AsyncLuceneQuery<AppUser>("AppUserMapReduceIndex").Where("Username:" + username + " AND Password:" + password).WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    if (response != null && response.Count > 0)
+                    {
+                        appUser(response.First());
+                        return true;
+                    }
                 }
             }
             catch (Exception x)
@@ -143,6 +140,42 @@ namespace EkushApp.EmbededDB
                 Log.Error("Error when authenticate user.", x);
             }
             return users;
+        }
+        public async Task<List<AppUser>> GetAppUser()
+        {
+            List<AppUser> users = new List<AppUser>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var response = await session.Advanced.AsyncLuceneQuery<AppUser>("AppUserMapReduceIndex").WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    users.AddRange(response);
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when authenticate user.", x);
+            }
+            return users;
+        }
+        public async Task DeleteAppUser(AppUser user)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var delOperation = await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("AppUserMapReduceIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = "Username: " + user.Username
+                                                    }, false);
+                    await delOperation.WaitForCompletionAsync();
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when delete hardware.", x);
+            }
         }
         #endregion
 
@@ -376,6 +409,6 @@ namespace EkushApp.EmbededDB
         {
             if (!disposing) return;
         }
-        #endregion                
+        #endregion
     }
 }

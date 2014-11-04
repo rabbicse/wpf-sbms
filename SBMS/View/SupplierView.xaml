@@ -30,17 +30,17 @@
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <WrapPanel Grid.Row="0" Margin="10, 10, 10, 0">
-                        <Button Content="New Hardware" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewHardwareCommand, IsAsync=True}" />
+                        <Button Content="New" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewHardwareCommand, IsAsync=True}" />
                     </WrapPanel>
                     <ListView Grid.Row="1" ItemsSource="{Binding SupplierCollection, IsAsync=True}" SelectedItem="{Binding SelectedUser}" AlternationCount="2" AutomationProperties.AutomationId="1"
                               IsSynchronizedWithCurrentItem="True" Margin="10">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="User">
-                                <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding Path=Name}" Width="100"/>
-                                <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Path=Address}" Width="100"/>
-                                <GridViewColumn Header="Contact Person" DisplayMemberBinding="{Binding Path=ContactPersonName}" Width="100"/>
-                                <GridViewColumn Header="Contact Mobile NO." DisplayMemberBinding="{Binding Path=ContactMobileNo}" Width="120"/>
-                                <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="150"/>
+                                <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding Path=Name}" />
+                                <GridViewColumn Header="Address" DisplayMemberBinding="{Binding Path=Address}" />
+                                <GridViewColumn Header="Contact Person" DisplayMemberBinding="{Binding Path=ContactPersonName}" />
+                                <GridViewColumn Header="Contact Mobile NO." DisplayMemberBinding="{Binding Path=ContactMobileNo}" />
+                                <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" />
                                 <GridViewColumn Header="Actions">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

@@ -92,6 +92,8 @@
     <Compile Include="Splash\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\AppUserOperatorViewModel.cs" />
+    <Compile Include="ViewModel\AppUserViewModel.cs" />
     <Compile Include="ViewModel\HardwareOperationViewModel.cs" />
     <Compile Include="ViewModel\HardwareViewModel.cs" />
     <Compile Include="ViewModel\LoginViewModel.cs" />
@@ -101,6 +103,12 @@
     <Compile Include="ViewModel\SupplierViewModel.cs" />
     <Compile Include="ViewModel\UserOperationViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
+    <Compile Include="View\AppUserOperatorView.xaml.cs">
+      <DependentUpon>AppUserOperatorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AppUserView.xaml.cs">
+      <DependentUpon>AppUserView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\HardwareOperationView.xaml.cs">
       <DependentUpon>HardwareOperationView.xaml</DependentUpon>
     </Compile>
@@ -202,6 +210,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Splash\SplashWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AppUserOperatorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AppUserView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

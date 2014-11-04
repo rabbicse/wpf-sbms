@@ -10,115 +10,137 @@
         <converter:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <appConverter:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
     </ViewBase:UserControlBase.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>    
-        <StackPanel>
-            <Grid Margin="10, 10, 20, 20">
-                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" Background="White" Opacity="0.5" BorderBrush="White" CornerRadius="12" BorderThickness="2">
-                    <Border.Effect>
-                        <DropShadowEffect Direction="320" ShadowDepth="10" BlurRadius="20" Color="Green" />
-                    </Border.Effect>
-                </Border>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <WrapPanel Grid.Row="0" Margin="10, 10, 10, 0" HorizontalAlignment="Stretch">
-                        <TextBlock Text="Total Hardware report"  Foreground="Black" FontWeight="Bold" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center" />
-                    </WrapPanel>
-                    <WrapPanel Grid.Row="1" Margin="10, 5, 10, 0">
-                        <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintHWReportCommand, IsAsync=True}" />
-                    </WrapPanel>
-                    <ListView Grid.Row="2" ItemsSource="{Binding HardwareCollection, IsAsync=True}" AlternationCount="2" AutomationProperties.AutomationId="1"
-                              IsSynchronizedWithCurrentItem="True" Margin="10">
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current positions">
-                                <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" Width="100"/>
-                                <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="100"/>
-                                <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=Count}" Width="100" />
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </Grid>
-            </Grid>
-            
-            
-            <Grid Margin="10, 10, 20, 20">
-                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" Background="White" Opacity="0.5" BorderBrush="White" CornerRadius="12" BorderThickness="2">
-                    <Border.Effect>
-                        <DropShadowEffect Direction="320" ShadowDepth="10" BlurRadius="20" Color="Green" />
-                    </Border.Effect>
-                </Border>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <WrapPanel Grid.Row="0" Margin="10, 10, 10, 0" HorizontalAlignment="Stretch">
-                        <TextBlock Text="Active Hardware report"  Foreground="Black" FontWeight="Bold" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center" />
-                    </WrapPanel>
-                    <WrapPanel Grid.Row="1" Margin="10, 5, 10, 0">
-                        <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintHWReportCommand, IsAsync=True}" />
-                    </WrapPanel>
-                    <ListView Grid.Row="2" ItemsSource="{Binding ActiveHardwareCollection, IsAsync=True}" AlternationCount="2" AutomationProperties.AutomationId="1"
-                              IsSynchronizedWithCurrentItem="True" Margin="10">
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current positions">
-                                <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" Width="100"/>
-                                <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" Width="100"/>
-                                <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="100"/>
-                                <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="100" />
-                                <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}" Width="100"/>
-                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}" Width="100"/>
-                                <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="100"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </Grid>
-            </Grid>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="10, 10, 20, 20">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" Background="White" Opacity="0.5" BorderBrush="White" CornerRadius="12" BorderThickness="2">
+                <Border.Effect>
+                    <DropShadowEffect Direction="320" ShadowDepth="10" BlurRadius="20" Color="Green" />
+                </Border.Effect>
+            </Border>
+            <StackPanel Margin="10">
+                <Expander IsExpanded="False" Header="Total Hardware report" FontSize="14" FontWeight="Bold">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <WrapPanel Grid.Row="0" Margin="10, 5, 10, 0">
+                            <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintHWReportCommand, IsAsync=True}" />
+                        </WrapPanel>
+                        <ListView Grid.Row="1" ItemsSource="{Binding HardwareCollection, IsAsync=True}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" FontWeight="Normal" FontSize="12">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true">
+                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" />
+                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" />
+                                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Path=Count}" />
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
 
-            <Grid Margin="10, 10, 20, 20">
-                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" Background="White" Opacity="0.5" BorderBrush="White" CornerRadius="12" BorderThickness="2">
-                    <Border.Effect>
-                        <DropShadowEffect Direction="320" ShadowDepth="10" BlurRadius="20" Color="Green" />
-                    </Border.Effect>
-                </Border>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <WrapPanel Grid.Row="0" Margin="10, 10, 10, 0" HorizontalAlignment="Stretch">
-                        <TextBlock Text="Inactive Hardware report"  Foreground="Black" FontWeight="Bold" FontSize="16" TextAlignment="Center" HorizontalAlignment="Center" />
-                    </WrapPanel>
-                    <WrapPanel Grid.Row="1" Margin="10, 5, 10, 0">
-                        <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintHWReportCommand, IsAsync=True}" />
-                    </WrapPanel>
-                    <ListView Grid.Row="2" ItemsSource="{Binding ActiveHardwareCollection, IsAsync=True}" AlternationCount="2" AutomationProperties.AutomationId="1"
-                              IsSynchronizedWithCurrentItem="True" Margin="10">
-                        <ListView.View>
-                            <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current positions">
-                                <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" Width="100"/>
-                                <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" Width="100"/>
-                                <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="100"/>
-                                <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="100" />
-                                <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}" Width="100"/>
-                                <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}" Width="100"/>
-                                <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="100"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </Grid>
-            </Grid>
+                <Expander IsExpanded="False" Header="Active Hardware report" FontSize="14" FontWeight="Bold">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <WrapPanel Grid.Row="0" Margin="10, 5, 10, 0">
+                            <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintRunningHWCommand, IsAsync=True}" />
+                        </WrapPanel>
+                        <ListView Grid.Row="2" ItemsSource="{Binding ActiveHardwareCollection, IsAsync=True}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true">
+                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}"/>
+                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}"/>
+                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}"/>
+                                    <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" />
+                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}"/>
+                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}"/>
+                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
 
+                <Expander IsExpanded="False" Header="Inactive Hardware report" FontSize="14" FontWeight="Bold">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <WrapPanel Grid.Row="0" Margin="10, 5, 10, 0">
+                            <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintInactiveHWCommand, IsAsync=True}" />
+                        </WrapPanel>
+                        <ListView Grid.Row="1" ItemsSource="{Binding InActiveHardwareCollection, IsAsync=True}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current positions">
+                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" />
+                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" />
+                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" />
+                                    <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" />
+                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}" />
+                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}" />
+                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
 
-        </StackPanel>
-    </Grid>
+                <Expander IsExpanded="False" Header="Hardwares Sent To Repair Report" FontSize="14" FontWeight="Bold">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <WrapPanel Grid.Row="0" Margin="10, 5, 10, 0">
+                            <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintRepairHWCommand, IsAsync=True}" />
+                        </WrapPanel>
+                        <ListView Grid.Row="1" ItemsSource="{Binding InRepairHardwareCollection, IsAsync=True}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current positions">
+                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" Width="Auto"/>
+                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" Width="Auto"/>
+                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="Auto"/>
+                                    <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="Auto" />
+                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}" Width="Auto"/>
+                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}" Width="Auto"/>
+                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="Auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+
+                <Expander IsExpanded="False" Header="User Report" FontSize="14" FontWeight="Bold">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <WrapPanel Grid.Row="0" Margin="10, 0, 10, 0">
+                            <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintUserReportCommand, IsAsync=True}" />
+                        </WrapPanel>
+                        <ListView Grid.Row="1" ItemsSource="{Binding UserReportCollection, IsAsync=True}" SelectedItem="{Binding SelectedUser}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
+                            <ListView.View>
+                                <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="User">
+                                    <GridViewColumn Header="User Name" DisplayMemberBinding="{Binding Path=UserName}" Width="Auto"/>
+                                    <GridViewColumn Header="Designation" DisplayMemberBinding="{Binding Path=Designation}" Width="Auto"/>
+                                    <GridViewColumn Header="Department" DisplayMemberBinding="{Binding Path=Department}" Width="Auto"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Expander>
+
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
 </ViewBase:UserControlBase>

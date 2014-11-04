@@ -108,8 +108,7 @@ namespace SBMS.ViewModel
             Name = user.Name;
             Designation = user.Designation;
             Department = user.Department;
-            CurrentHardware = Hardwares.Where(h => h.SerialNo == user.UserHardware.SerialNo).FirstOrDefault();
-
+            CurrentHardware = Hardwares.Where(h => h.SerialNo == user.HardwareSerial).FirstOrDefault();
             Comments = user.Comments;
         }
         private void CloseCommandAction(object obj)
@@ -128,7 +127,7 @@ namespace SBMS.ViewModel
                 Name = Name,
                 Designation = Designation,
                 Department = Department,
-                UserHardware = CurrentHardware,
+                HardwareSerial = CurrentHardware.SerialNo,
                 Comments = Comments
             };
             await DbHandler.Instance.SaveUser(user);

@@ -14,7 +14,7 @@ namespace EkushApp.Model
         public string Name { get; set; }
         public string Designation { get; set; }
         public string Department { get; set; }
-        public Hardware UserHardware { get; set; }
+        public long HardwareSerial { get; set; }
         public string Comments { get; set; }
     }
 }

@@ -15,8 +15,8 @@ namespace EkushApp.EmbededDB
             Map = users => from user in users
                            select new
                            {
-                               user.UserId,
-                               user.Username
+                               user.Username,
+                               user.Password
                            };
         }
     }

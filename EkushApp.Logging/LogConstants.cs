@@ -22,7 +22,7 @@ namespace EkushApp.Logging
             {
                 if (!string.IsNullOrEmpty(_commonAppPath)) return _commonAppPath;
 
-                return Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+                return Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
             set
             {
