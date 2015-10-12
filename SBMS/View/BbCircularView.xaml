@@ -1,0 +1,14 @@
+﻿<ViewBase:UserControlBase x:Class="SBMS.View.BbCircularView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"
+             xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls"
+             xmlns:appConverter="clr-namespace:SBMS.Infrastructure.Converter;assembly=SBMS.Infrastructure"
+             xmlns:controls="clr-namespace:EkushApp.WpfControls.Controls;assembly=EkushApp.WpfControls">
+    <Grid>
+            
+    </Grid>
+</ViewBase:UserControlBase>

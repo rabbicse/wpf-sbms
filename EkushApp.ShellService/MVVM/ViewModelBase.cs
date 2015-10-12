@@ -16,7 +16,7 @@ using System.Windows.Threading;
 namespace EkushApp.ShellService.MVVM
 {
     [Serializable]
-    public abstract class ViewModelBase : IViewModel, IBusyIndicator, INotifyPropertyChanged, IDisposable
+    public abstract class ViewModelBase : IViewModel, IBusyIndicator, IPopup, INotifyPropertyChanged, IDisposable
     {
         #region Constructor(s)
         ~ViewModelBase()
@@ -90,6 +90,35 @@ namespace EkushApp.ShellService.MVVM
         {
             BusyContent = string.Empty;
             IsBusy = false;
+        }
+        #endregion
+
+        #region IPopup
+        private bool _isShowPopup;
+        public bool IsShowPopup
+        {
+            get
+            {
+                return _isShowPopup;
+            }
+            set
+            {
+                _isShowPopup = value;
+                OnPropertyChanged(() => IsShowPopup);
+            }
+        }
+        private object _popupContent;
+        public object PopupContent
+        {
+            get
+            {
+                return _popupContent;
+            }
+            set
+            {
+                _popupContent = value;
+                OnPropertyChanged(() => PopupContent);
+            }
         }
         #endregion
 

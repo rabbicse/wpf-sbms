@@ -76,6 +76,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+    <Content Include="plugins\Raven.Bundles.Authorization.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+=======
+>>>>>>> parent of 04a661c... Updated application.
     <Content Include="plugins\Raven.Bundles.CascadeDelete.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

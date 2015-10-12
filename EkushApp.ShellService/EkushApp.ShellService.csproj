@@ -81,6 +81,7 @@
     <Compile Include="Mediators\MediatorMessageSinkAttribute.cs" />
     <Compile Include="MVVM\CompositeContainer.cs" />
     <Compile Include="MVVM\IBusyIndicator.cs" />
+    <Compile Include="MVVM\IPopup.cs" />
     <Compile Include="MVVM\IShellService.cs" />
     <Compile Include="MVVM\IView.cs" />
     <Compile Include="MVVM\IViewModel.cs" />

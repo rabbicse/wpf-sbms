@@ -18,6 +18,10 @@ using Raven.Abstractions.Exceptions;
 using System.Collections.Concurrent;
 using Raven.Client.UniqueConstraints;
 using System.Threading;
+using Raven.Server;
+using Raven.Database.Config;
+using Raven.Abstractions.FileSystem;
+using Raven.Client.FileSystem;
 
 namespace EkushApp.EmbededDB
 {
@@ -25,6 +29,7 @@ namespace EkushApp.EmbededDB
     {
         #region Declaration(s)
         public static string DatabasePath { get; set; }
+        public static string DbFilePath { get; set; }
         private readonly object _lockObject = new object();
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
         #endregion
@@ -41,14 +46,48 @@ namespace EkushApp.EmbededDB
                 }
                 return _instance;
             }
-        }
-        private Lazy<IDocumentStore> DocStore = new Lazy<IDocumentStore>(() =>
+        }        
+        private IDocumentStore DocumentStore
         {
-            var documentStore = new EmbeddableDocumentStore()
+            get { return RavenServer.Value.DocumentStore; }
+        }
+        private IFilesStore FileStore
+        {
+            get { return RavenServer.Value.FilesStore; }
+        }
+        private Lazy<RavenDbServer> RavenServer = new Lazy<RavenDbServer>(() =>
+        {
+            var ravenConfiguration = new RavenConfiguration
             {
-                DataDirectory = DatabasePath
+                DataDirectory = DatabasePath,
+                FlushIndexToDiskSizeInMb = 10,
+                ResetIndexOnUncleanShutdown = true,
+                Settings = { 
+                { "Raven/StorageEngine", "voron" },
+                {"Raven/Voron/MaxBufferPoolSize", "2"},
+                {"Raven/Voron/MaxScratchBufferSize", "512"},
+                {"Raven/TransactionMode", "Lazy"},
+                {"Raven/MaxNumberOfItemsToIndexInSingleBatch", "128"},
+                {"Raven/MaxNumberOfItemsToPreFetchForIndexing", "128"}}
             };
+            var ravenServer = new RavenDbServer(ravenConfiguration);
+            ravenServer.UseEmbeddedHttpServer = true;
+            ravenServer.DocumentStore.RegisterListener(new UniqueConstraintsStoreListener());
+            ravenServer.DocumentStore.Conventions.DefaultUseOptimisticConcurrency = true;
+            ravenServer.DocumentStore.Conventions.DefaultQueryingConsistency = Raven.Client.Document.ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite;
+            ravenServer.Initialize();
 
+<<<<<<< HEAD
+            var createFs = Task.Run(async () =>
+            {
+                await ravenServer.FilesStore.AsyncFilesCommands.Admin.CreateOrUpdateFileSystemAsync(new FileSystemDocument
+                {
+                    Settings = { { "Raven/FileSystem/DataDir", DbFilePath } }
+                }, "sbms_filesystem").ConfigureAwait(false);
+            });
+            createFs.Wait();
+            ravenServer.FilesStore.DefaultFileSystem = "sbms_filesystem";
+=======
             documentStore.RegisterListener(new UniqueConstraintsStoreListener());
             documentStore.Configuration.ResetIndexOnUncleanShutdown = true;
             documentStore.Configuration.MaxPageSize = 10000;
@@ -58,13 +97,10 @@ namespace EkushApp.EmbededDB
             documentStore.Configuration.NewIndexInMemoryMaxBytes = 128;
             documentStore.Configuration.InitialNumberOfItemsToIndexInSingleBatch = 1024;
             documentStore.Initialize();
+>>>>>>> parent of 04a661c... Updated application.
 
-            return documentStore;
+            return ravenServer;
         });
-        private IDocumentStore DocumentStore
-        {
-            get { return DocStore.Value; }
-        }
         #endregion
 
         #region Constructor(s)
@@ -131,7 +167,7 @@ namespace EkushApp.EmbededDB
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var response = await session.Advanced.AsyncLuceneQuery<AppUser>("AppUserMapReduceIndex").WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    var response = await session.Advanced.AsyncDocumentQuery<AppUser, AppUserMapReduceIndex>().ToListAsync();
                     users.AddRange(response);
                 }
             }
@@ -148,7 +184,7 @@ namespace EkushApp.EmbededDB
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var response = await session.Advanced.AsyncLuceneQuery<AppUser>("AppUserMapReduceIndex").WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    var response = await session.Advanced.AsyncDocumentQuery<AppUser, AppUserMapReduceIndex>().ToListAsync();
                     users.AddRange(response);
                 }
             }

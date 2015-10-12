@@ -19,6 +19,7 @@ namespace SBMS.Infrastructure
         public static class EmbededDB
         {
             public static readonly string DB_PATH = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SBMS\sbms_db";
+            public static readonly string DB_FILE_PATH = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\SBMS\sbms_fs";
         }
         public static class RegistryConstants
         {

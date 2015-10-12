@@ -74,6 +74,7 @@ namespace SBMS
             MessageListener.Instance.ReceiveProgress(10);
 
             DbHandler.DatabasePath = Globals.EmbededDB.DB_PATH;
+            DbHandler.DbFilePath = Globals.EmbededDB.DB_FILE_PATH;
 
             // TODO TEST, Here we'll delete dirty records etc. before start
             var users = await DbHandler.Instance.GetUsers();
