@@ -72,7 +72,11 @@ namespace SBMS.ViewModel
         {
             get
             {
-                return _hardwareVM ?? ShellContainer.GetExportedInstance<HardwareViewModel>();
+                if (_hardwareVM == null)
+                {
+                    _hardwareVM = ShellContainer.GetExportedInstance<HardwareViewModel>();
+                }
+                return _hardwareVM;
             }
         }
         private UserViewModel _userVM;
@@ -80,7 +84,11 @@ namespace SBMS.ViewModel
         {
             get
             {
-                return _userVM ?? ShellContainer.GetExportedInstance<UserViewModel>();
+                if (_userVM == null)
+                {
+                    _userVM = ShellContainer.GetExportedInstance<UserViewModel>();
+                }
+                return _userVM;
             }
         }
         private SupplierViewModel _supplierVM;
@@ -88,7 +96,11 @@ namespace SBMS.ViewModel
         {
             get
             {
-                return _supplierVM ?? ShellContainer.GetExportedInstance<SupplierViewModel>();
+                if (_supplierVM == null)
+                {
+                    _supplierVM = ShellContainer.GetExportedInstance<SupplierViewModel>();
+                }
+                return _supplierVM;
             }
         }
         private AppUserViewModel _appuserVM;
@@ -96,7 +108,11 @@ namespace SBMS.ViewModel
         {
             get
             {
-                return _appuserVM ?? ShellContainer.GetExportedInstance<AppUserViewModel>();
+                if (_appuserVM == null)
+                {
+                    _appuserVM = ShellContainer.GetExportedInstance<AppUserViewModel>();
+                }
+                return _appuserVM;
             }
         }
         private ReportViewModel _reportVM;
@@ -104,7 +120,23 @@ namespace SBMS.ViewModel
         {
             get
             {
-                return _reportVM ?? ShellContainer.GetExportedInstance<ReportViewModel>();
+                if (_reportVM == null)
+                {
+                    _reportVM = ShellContainer.GetExportedInstance<ReportViewModel>();
+                }
+                return _reportVM;
+            }
+        }
+        private BbCircularViewModel _bbCircularVM;
+        public BbCircularViewModel BbCircularVM
+        {
+            get
+            {
+                if (_bbCircularVM == null)
+                {
+                    _bbCircularVM = ShellContainer.GetExportedInstance<BbCircularViewModel>();
+                }
+                return _bbCircularVM;
             }
         }
         #endregion
@@ -153,6 +185,7 @@ namespace SBMS.ViewModel
             TabCollection.Add(UserVM);
             TabCollection.Add(SupplierVM);
             TabCollection.Add(ReportVM);
+            TabCollection.Add(BbCircularVM);
             SelectedTab = TabCollection.FirstOrDefault();
         }
 

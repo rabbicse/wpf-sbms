@@ -46,7 +46,7 @@ namespace EkushApp.EmbededDB
                 }
                 return _instance;
             }
-        }        
+        }
         private IDocumentStore DocumentStore
         {
             get { return RavenServer.Value.DocumentStore; }
@@ -77,7 +77,6 @@ namespace EkushApp.EmbededDB
             ravenServer.DocumentStore.Conventions.DefaultQueryingConsistency = Raven.Client.Document.ConsistencyOptions.AlwaysWaitForNonStaleResultsAsOfLastWrite;
             ravenServer.Initialize();
 
-<<<<<<< HEAD
             var createFs = Task.Run(async () =>
             {
                 await ravenServer.FilesStore.AsyncFilesCommands.Admin.CreateOrUpdateFileSystemAsync(new FileSystemDocument
@@ -87,17 +86,6 @@ namespace EkushApp.EmbededDB
             });
             createFs.Wait();
             ravenServer.FilesStore.DefaultFileSystem = "sbms_filesystem";
-=======
-            documentStore.RegisterListener(new UniqueConstraintsStoreListener());
-            documentStore.Configuration.ResetIndexOnUncleanShutdown = true;
-            documentStore.Configuration.MaxPageSize = 10000;
-            documentStore.Configuration.MaxNumberOfItemsToIndexInSingleBatch = 1024 * 1024;
-            documentStore.Configuration.MaxNumberOfItemsToPreFetchForIndexing = 1024 * 1024;
-            documentStore.Configuration.MaxNumberOfItemsToReduceInSingleBatch = 1024 * 1024;
-            documentStore.Configuration.NewIndexInMemoryMaxBytes = 128;
-            documentStore.Configuration.InitialNumberOfItemsToIndexInSingleBatch = 1024;
-            documentStore.Initialize();
->>>>>>> parent of 04a661c... Updated application.
 
             return ravenServer;
         });
@@ -128,7 +116,7 @@ namespace EkushApp.EmbededDB
                                                     new IndexQuery
                                                     {
                                                         Query = "Username:" + user.Username
-                                                    }, false);
+                                                    }, new BulkOperationOptions { AllowStale = false });
                     await session.StoreAsync(user);
                     await session.SaveChangesAsync();
                     return true;
@@ -204,7 +192,7 @@ namespace EkushApp.EmbededDB
                                                     new IndexQuery
                                                     {
                                                         Query = "Username: " + user.Username
-                                                    }, false);
+                                                    }, new BulkOperationOptions { AllowStale = false });
                     await delOperation.WaitForCompletionAsync();
                 }
             }
@@ -227,9 +215,8 @@ namespace EkushApp.EmbededDB
                                                     new IndexQuery
                                                     {
                                                         Query = "SerialNo: " + hardware.SerialNo
-                                                    }, false);
-                    var maxIds = await session.Advanced.AsyncLuceneQuery<Hardware>("HardwareMapIndex")
-                        .WaitForNonStaleResultsAsOfLastWrite().OrderByDescending(p => p.SerialNo).ToListAsync();
+                                                    }, new BulkOperationOptions { AllowStale = false });
+                    var maxIds = await session.Advanced.AsyncDocumentQuery<Hardware, HardwareMapIndex>().OrderByDescending(p => p.SerialNo).ToListAsync();
                     if (maxIds != null && maxIds.Count > 0)
                     {
                         var maxId = maxIds.Select(id => (long)id.SerialNo).Max();
@@ -279,7 +266,7 @@ namespace EkushApp.EmbededDB
                                                     new IndexQuery
                                                     {
                                                         Query = "SerialNo: " + hardware.SerialNo
-                                                    }, false);
+                                                    }, new BulkOperationOptions { AllowStale = false });
                     await delOperation.WaitForCompletionAsync();
                 }
             }
@@ -301,7 +288,7 @@ namespace EkushApp.EmbededDB
                                                     new IndexQuery
                                                     {
                                                         Query = "Id: " + user.Id
-                                                    }, false);
+                                                    }, new BulkOperationOptions { AllowStale = false });
                     var maxIds = await session.Advanced.AsyncLuceneQuery<User>("UserMapReduceIndex")
                         .WaitForNonStaleResultsAsOfLastWrite().OrderByDescending(p => p.Id).ToListAsync();
                     if (maxIds != null && maxIds.Count > 0)
@@ -353,7 +340,7 @@ namespace EkushApp.EmbededDB
                                                     new IndexQuery
                                                     {
                                                         Query = "Id: " + user.Id
-                                                    }, false);
+                                                    }, new BulkOperationOptions { AllowStale = false });
                     await delOperation.WaitForCompletionAsync();
                 }
             }
@@ -411,7 +398,7 @@ namespace EkushApp.EmbededDB
                                                     new IndexQuery
                                                     {
                                                         Query = "Id: " + supplier.Id
-                                                    }, false);
+                                                    }, new BulkOperationOptions { AllowStale = false });
                     await delOperation.WaitForCompletionAsync();
                 }
             }
