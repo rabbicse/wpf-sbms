@@ -1,6 +1,7 @@
 ﻿using EkushApp.ShellService.Commands;
 using EkushApp.ShellService.MVVM;
 using EkushApp.Utility.Extensions;
+using SBMS.Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,16 @@ namespace SBMS.ViewModel
                 _tag = value;
             }
         }
+        private ColumnConfig _columnConfig;
+        public ColumnConfig ColumnConfiguration
+        {
+            get { return _columnConfig; }
+            set
+            {
+                _columnConfig = value;
+                OnPropertyChanged(() => ColumnConfiguration);
+            }
+        }
         private Lazy<OptimizedObservableCollection<T>> _collection;
         public OptimizedObservableCollection<T> Collection
         {
@@ -38,13 +49,13 @@ namespace SBMS.ViewModel
         #endregion
 
         #region Constructor(s)
-        public GenericViewModel() 
+        public GenericViewModel()
         {
             _collection = new Lazy<OptimizedObservableCollection<T>>();
             NewCommand = new CommandHandler<object, object>(NewCommandAction);
             EditCommand = new CommandHandler<object, object>(EditCommandAction);
             DeleteCommand = new CommandHandler<object, object>(DeleteCommandAction);
-        }                        
+        }
         #endregion
 
         #region Command Manager(s)
@@ -54,11 +65,11 @@ namespace SBMS.ViewModel
         }
         public void EditCommandAction(object obj)
         {
-            
+
         }
         private void DeleteCommandAction(object obj)
         {
-            
+
         }
         #endregion
 

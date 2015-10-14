@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="BbCircular.cs" />
     <Compile Include="Hardware.cs" />
+    <Compile Include="Header.cs" />
     <Compile Include="Report.cs" />
     <Compile Include="Supplier.cs" />
     <Compile Include="User.cs" />

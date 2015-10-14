@@ -88,6 +88,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Generic\Column.cs" />
+    <Compile Include="Generic\ColumnConfig.cs" />
+    <Compile Include="Generic\DynamicGridViewConverter.cs" />
     <Compile Include="Reports\ReportGenerator.cs" />
     <Compile Include="Splash\SplashWindow.xaml.cs">
       <DependentUpon>SplashWindow.xaml</DependentUpon>
@@ -111,8 +114,14 @@
     <Compile Include="View\AppUserView.xaml.cs">
       <DependentUpon>AppUserView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\BbCircularOperationView.xaml.cs">
+      <DependentUpon>BbCircularOperationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\BbCircularView.xaml.cs">
       <DependentUpon>BbCircularView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\GenericOperation.xaml.cs">
+      <DependentUpon>GenericOperation.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\GenericView.xaml.cs">
       <DependentUpon>GenericView.xaml</DependentUpon>
@@ -229,7 +238,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\BbCircularOperationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\BbCircularView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\GenericOperation.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

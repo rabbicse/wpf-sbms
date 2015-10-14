@@ -8,5 +8,9 @@ namespace EkushApp.Model
 {
     public class BbCircular
     {
+        [Header("Circular Title")]
+        public string Title { get; set; }
+        [Header("Publish Date")]
+        public DateTime PublishDate { get; set; }
     }
 }

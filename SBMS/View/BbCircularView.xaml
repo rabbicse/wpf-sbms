@@ -7,10 +7,12 @@
              xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"
              xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls"
              xmlns:appConverter="clr-namespace:SBMS.Infrastructure.Converter;assembly=SBMS.Infrastructure"
-             xmlns:controls="clr-namespace:EkushApp.WpfControls.Controls;assembly=EkushApp.WpfControls">
+             xmlns:controls="clr-namespace:EkushApp.WpfControls.Controls;assembly=EkushApp.WpfControls"
+             xmlns:generic="clr-namespace:SBMS.Generic">
     <ViewBase:UserControlBase.Resources>
         <converter:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <appConverter:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+        <generic:DynamicGridViewConverter x:Key="GenericConverter" />
     </ViewBase:UserControlBase.Resources>
     <Grid>
         <Grid>
@@ -62,8 +64,8 @@
                         </StackPanel>
                     </Grid>
                     <ListView Grid.Row="1" ItemsSource="{Binding AppUserCollection, IsAsync=True}" SelectedItem="{Binding SelectedHardware}" AlternationCount="2" AutomationProperties.AutomationId="1"
-                              IsSynchronizedWithCurrentItem="True" Margin="10">
-                        <ListView.View>
+                              IsSynchronizedWithCurrentItem="True" Margin="10" View="{Binding ColumnConfiguration, Converter={StaticResource GenericConverter}}">
+                        <!--<ListView.View>
                             <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Bangladesh Bank Circulars">
                                 <GridViewColumn Header="Publish Date" DisplayMemberBinding="{Binding Path=Username}" Width="Auto"/>
                                 <GridViewColumn Header="Title" DisplayMemberBinding="{Binding Path=FullName}" Width="Auto"/>
@@ -102,7 +104,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                             </GridView>
-                        </ListView.View>
+                        </ListView.View>-->
                     </ListView>
                 </Grid>
             </Grid>
