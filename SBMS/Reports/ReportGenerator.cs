@@ -14,7 +14,7 @@ namespace SBMS.Reports
 {
     public class ReportGenerator
     {
-        public static void CreateHardwareReport(string fileName, IEnumerable<HardwareReport> hardwares)
+        public static void CreateHardwareReport(string fileName, IEnumerable<HardwareCountReport> hardwares)
         {
             try
             {
@@ -44,32 +44,38 @@ namespace SBMS.Reports
             }
         }
 
-        public static void CreateHardwareStatusReport(string fileName, IEnumerable<Hardware> hardwares)
+        public static void CreateHardwareStatusReport(string fileName, IEnumerable<HardwareReport> hardwares)
         {
             try
             {
-                Document document = new Document(PageSize.A4, 72, 72, 72, 72);
+                Document document = new Document(PageSize.A4.Rotate(), 72, 72, 72, 72);
                 PdfWriter.GetInstance(document, new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None));
                 document.Open();
                 document.Add(new Paragraph(Element.ALIGN_CENTER, "Hardware Report", new Font(iTextSharp.text.Font.FontFamily.HELVETICA, 16, Font.BOLD)));
-                document.Add(new Chunk(Chunk.NEWLINE));
-                var table = new PdfPTable(6);
-                table.SetTotalWidth(new float[] { 20f, 20f, 20f, 20f, 20f, 20f });
+                document.Add(new Phrase(Environment.NewLine));
+                var table = new PdfPTable(9);
+                //table.SetTotalWidth(new float[] { 20f, 20f, 20f, 20f, 20f, 20f });
                 table.WidthPercentage = 100;
-                table.AddCell(new Phrase("Category"));
-                table.AddCell(new Phrase("Hardware Tag No."));
+                table.AddCell(new Phrase("Hardware Category"));
+                table.AddCell(new Phrase("Hardware Sl. NO."));
+                table.AddCell(new Phrase("VCD Tag"));
+                table.AddCell(new Phrase("Brand Name"));
                 table.AddCell(new Phrase("Model"));
-                table.AddCell(new Phrase("Brand"));
+                table.AddCell(new Phrase("Serial No."));
                 table.AddCell(new Phrase("Receive Date"));
-                table.AddCell(new Phrase("Status"));
+                table.AddCell(new Phrase("Users Name"));
+                table.AddCell(new Phrase("Comments"));
                 foreach (var hw in hardwares)
                 {
-                    table.AddCell(new Phrase(hw.Category.ToString()));
+                    table.AddCell(new Phrase(hw.Category));
+                    table.AddCell(new Phrase(hw.SerialNo.ToString()));
                     table.AddCell(new Phrase(hw.HardwareTagNo));
-                    table.AddCell(new Phrase(hw.Model));
                     table.AddCell(new Phrase(hw.BrandName));
-                    table.AddCell(new Phrase(hw.ReceiveDate.Value.ToString("dd/mm/yyyy", CultureInfo.InvariantCulture) ?? string.Empty));
-                    table.AddCell(new Phrase(hw.Status.ToString()));
+                    table.AddCell(new Phrase(hw.Model));
+                    table.AddCell(new Phrase(hw.HardwareSerialNo));
+                    table.AddCell(new Phrase(hw.ReceiveDate));
+                    table.AddCell(new Phrase(hw.ComputerUserName));
+                    table.AddCell(new Phrase(hw.Comments));
                 }
                 document.Add(table);
                 document.Close();

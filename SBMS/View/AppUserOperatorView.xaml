@@ -65,8 +65,8 @@
             <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding Email}" Margin="5"/>
 
             <TextBlock Grid.Row="5" Grid.Column="0" Text="Mobile No.: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
-            <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding MobileNo}"/>            
-            
+            <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Text="{Binding MobileNo}"/>
+
             <TextBlock Grid.Row="6" Grid.Column="0" Text="Role: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
             <ComboBox Grid.Row="6" Grid.Column="1" ItemsSource="{Binding UserRoles}" DisplayMemberPath="RoleName" SelectedItem="{Binding SelectedRole}" Margin="5"/>
         </Grid>
@@ -74,4 +74,4 @@
             <Button Width="80" Height="20" Content="Save" Cursor="Hand" Command="{Binding SaveCommand}" />
         </WrapPanel>
     </Grid>
-    </ViewBase:UserControlBase>
+</ViewBase:UserControlBase>

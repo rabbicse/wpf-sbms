@@ -21,7 +21,9 @@ namespace EkushApp.Model
     {
         RUNNING,
         UN_USED,
-        REPAIR_TO_TLD
+        INACTIVE,
+        REPAIR_TO_ITD,
+        SURRENDER_TO_ITD
     }
     public class Hardware
     {
@@ -31,9 +33,11 @@ namespace EkushApp.Model
         [UniqueConstraint]
         public string HardwareTagNo { get; set; }
         public string BrandName { get; set; }
-        public string Model { get; set; }        
+        public string Model { get; set; }
+        public string HardwareSerialNo { get; set; }
         public DateTime? ReceiveDate { get; set; }
         public HardwareStatus Status { get; set; }
+        public long? ComputerUserId { get; set; }
         public string Comments { get; set; }
     }
 }

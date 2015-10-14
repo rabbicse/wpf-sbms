@@ -42,6 +42,7 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => Category);
             }
         }
+        public long SerialNo { get; set; }
         private string _hardwareTagNo;
         public string HardwareTagNo
         {
@@ -72,7 +73,16 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => Model);
             }
         }
-        public long SerialNo { get; set; }
+        private string _hardwareSerialNo;
+        public string HardwareSerialNo
+        {
+            get { return _hardwareSerialNo; }
+            set
+            {
+                _hardwareSerialNo = value;
+                OnPropertyChanged(() => HardwareSerialNo);
+            }
+        }
         private DateTime? _receiveDate;
         public DateTime? ReceiveDate
         {
@@ -98,6 +108,22 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => Status);
             }
         }
+        private OptimizedObservableCollection<User> _computerUsers;
+        public OptimizedObservableCollection<User> ComputerUsers
+        {
+            get { return _computerUsers; }
+        }
+        private User _selectedComputerUser;
+        public User SelectedComputerUser
+        {
+            get { return _selectedComputerUser; }
+            set
+            {
+                _selectedComputerUser = value;
+                OnPropertyChanged(() => SelectedComputerUser);
+            }
+        }
+
         private string _comments;
         public string Comments
         {
@@ -120,12 +146,15 @@ namespace SBMS.ViewModel
             CloseCommand = new CommandHandler<object, object>(CloseCommandAction);
             _categories = new OptimizedObservableCollection<HardwareCategory>();
             _statuses = new OptimizedObservableCollection<HardwareStatus>();
+            _computerUsers = new OptimizedObservableCollection<User>();
             _categories.AddRange(Enum.GetValues(typeof(HardwareCategory)).Cast<HardwareCategory>().ToList());
             _statuses.AddRange(Enum.GetValues(typeof(HardwareStatus)).Cast<HardwareStatus>().ToList());
-        }        
+        }
 
         public void PrepareView(Hardware hardware)
         {
+            UpdateLookup();
+
             Category = hardware.Category;
             HardwareTagNo = hardware.HardwareTagNo;
             BrandName = hardware.BrandName;
@@ -134,6 +163,7 @@ namespace SBMS.ViewModel
             Status = hardware.Status;
             Comments = hardware.Comments;
             SerialNo = hardware.SerialNo;
+            SelectedComputerUser = ComputerUsers.FirstOrDefault(u => u.Id == hardware.ComputerUserId);
         }
         #endregion
 
@@ -147,8 +177,10 @@ namespace SBMS.ViewModel
                 HardwareTagNo = HardwareTagNo,
                 BrandName = BrandName,
                 Model = Model,
+                HardwareSerialNo = HardwareSerialNo,
                 ReceiveDate = ReceiveDate,
                 Status = Status,
+                ComputerUserId = SelectedComputerUser != null ? SelectedComputerUser.Id : (long?)null,
                 Comments = Comments
             });
             if (null != OnClosed)
@@ -168,6 +200,15 @@ namespace SBMS.ViewModel
         #region ViewModelBase
         public override void OnLoad()
         {
+            UpdateLookup();
+        }
+        private async void UpdateLookup()
+        {
+            var users = await DbHandler.Instance.GetUserCollection();
+            if (users != null && users.Count > 0)
+            {
+                ComputerUsers.AddRange(users);
+            }
         }
 
         public override void OnClosing()

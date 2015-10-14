@@ -53,13 +53,15 @@
                               IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="true">
-                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}"/>
-                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}"/>
-                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}"/>
-                                    <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" />
-                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}"/>
-                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}"/>
-                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}"/>
+                                    <GridViewColumn Header="Hardware Category" DisplayMemberBinding="{Binding Path=Category}" Width="Auto"/>
+                                    <GridViewColumn Header="Hardware Sl. No." DisplayMemberBinding="{Binding Path=SerialNo}" Width="Auto"/>
+                                    <GridViewColumn Header="VCD Tag" DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="Auto" />
+                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" Width="Auto"/>
+                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="Auto"/>
+                                    <GridViewColumn Header="Serial No." DisplayMemberBinding="{Binding Path=HardwareSerialNo}" Width="Auto" />
+                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate}"/>
+                                    <GridViewColumn Header="Users Name" DisplayMemberBinding="{Binding Path=ComputerUserName}" Width="Auto"/>
+                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="Auto"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -79,13 +81,15 @@
                               IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current positions">
-                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" />
-                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" />
-                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" />
-                                    <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" />
-                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}" />
-                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}" />
-                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}"/>
+                                    <GridViewColumn Header="Hardware Category" DisplayMemberBinding="{Binding Path=Category}" Width="Auto"/>
+                                    <GridViewColumn Header="Hardware Sl. No." DisplayMemberBinding="{Binding Path=SerialNo}" Width="Auto"/>
+                                    <GridViewColumn Header="VCD Tag" DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="Auto" />
+                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" Width="Auto"/>
+                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="Auto"/>
+                                    <GridViewColumn Header="Serial No." DisplayMemberBinding="{Binding Path=HardwareSerialNo}" Width="Auto" />
+                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate}"/>
+                                    <GridViewColumn Header="Users Name" DisplayMemberBinding="{Binding Path=ComputerUserName}" Width="Auto"/>
+                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="Auto"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -105,12 +109,14 @@
                               IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Current positions">
-                                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" Width="Auto"/>
+                                    <GridViewColumn Header="Hardware Category" DisplayMemberBinding="{Binding Path=Category}" Width="Auto"/>
+                                    <GridViewColumn Header="Hardware Sl. No." DisplayMemberBinding="{Binding Path=SerialNo}" Width="Auto"/>
+                                    <GridViewColumn Header="VCD Tag" DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="Auto" />
                                     <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" Width="Auto"/>
                                     <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="Auto"/>
-                                    <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="Auto" />
-                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}" Width="Auto"/>
-                                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}" Width="Auto"/>
+                                    <GridViewColumn Header="Serial No." DisplayMemberBinding="{Binding Path=HardwareSerialNo}" Width="Auto" />
+                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate}"/>
+                                    <GridViewColumn Header="Users Name" DisplayMemberBinding="{Binding Path=ComputerUserName}" Width="Auto"/>
                                     <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="Auto"/>
                                 </GridView>
                             </ListView.View>
@@ -118,22 +124,31 @@
                     </Grid>
                 </Expander>
 
-                <Expander IsExpanded="False" Header="User Report" FontSize="14" FontWeight="Bold">
+                <Expander IsExpanded="False" Header="Computer User Report" FontSize="14" FontWeight="Bold">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="Auto" />
                         </Grid.RowDefinitions>
                         <WrapPanel Grid.Row="0" Margin="10, 0, 10, 0">
-                            <Button Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintUserReportCommand, IsAsync=True}" />
+                            <TextBlock Text="User Name: " Margin="5" />
+                            <ComboBox ItemsSource="{Binding UserCollection}" Margin="5" DisplayMemberPath="Name" SelectedItem="{Binding SelectedUser}" Width="200" />
+                            <Button Margin="5" Content="Search User" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding SearchByUserCommand, IsAsync=True}" />
+                            <Button Margin="5" Content="Print Report" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding PrintUserReportCommand, IsAsync=True}" />
                         </WrapPanel>
                         <ListView Grid.Row="1" ItemsSource="{Binding UserReportCollection, IsAsync=True}" SelectedItem="{Binding SelectedUser}" AlternationCount="2" AutomationProperties.AutomationId="1"
                               IsSynchronizedWithCurrentItem="True" Margin="10" FontSize="12" FontWeight="Normal">
                             <ListView.View>
                                 <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="User">
-                                    <GridViewColumn Header="User Name" DisplayMemberBinding="{Binding Path=UserName}" Width="Auto"/>
-                                    <GridViewColumn Header="Designation" DisplayMemberBinding="{Binding Path=Designation}" Width="Auto"/>
-                                    <GridViewColumn Header="Department" DisplayMemberBinding="{Binding Path=Department}" Width="Auto"/>
+                                    <GridViewColumn Header="Hardware Category" DisplayMemberBinding="{Binding Path=Category}" Width="Auto"/>
+                                    <GridViewColumn Header="Hardware Sl. No." DisplayMemberBinding="{Binding Path=SerialNo}" Width="Auto"/>
+                                    <GridViewColumn Header="VCD Tag" DisplayMemberBinding="{Binding Path=HardwareTagNo}" Width="Auto" />
+                                    <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" Width="Auto"/>
+                                    <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" Width="Auto"/>
+                                    <GridViewColumn Header="Serial No." DisplayMemberBinding="{Binding Path=HardwareSerialNo}" Width="Auto" />
+                                    <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate}"/>
+                                    <GridViewColumn Header="Users Name" DisplayMemberBinding="{Binding Path=ComputerUserName}" Width="Auto"/>
+                                    <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" Width="Auto"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>

@@ -35,7 +35,7 @@
                               IsSynchronizedWithCurrentItem="True" Margin="10">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="User">
-                                <GridViewColumn Header="User Name" DisplayMemberBinding="{Binding Path=Name}" />
+                                <GridViewColumn Header="Computer User Name" DisplayMemberBinding="{Binding Path=Name}" />
                                 <GridViewColumn Header="Designation" DisplayMemberBinding="{Binding Path=Designation}" />
                                 <GridViewColumn Header="Department" DisplayMemberBinding="{Binding Path=Department}" />
                                 <GridViewColumn Header="Comments" DisplayMemberBinding="{Binding Path=Comments}" />

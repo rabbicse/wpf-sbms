@@ -16,7 +16,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>            
+            </Grid.RowDefinitions>
 
             <!--<DataGrid Grid.Row="1" ItemsSource="{Binding HardwareCollection, IsAsync=True}" Margin="10">
 
@@ -39,9 +39,11 @@
                               IsSynchronizedWithCurrentItem="True" Margin="10">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true" ColumnHeaderToolTip="Hardware">
+                                <GridViewColumn Header="Serial NO" DisplayMemberBinding="{Binding Path=SerialNo}" />
                                 <GridViewColumn Header="Category" DisplayMemberBinding="{Binding Path=Category}" />
                                 <GridViewColumn Header="Brand Name" DisplayMemberBinding="{Binding Path=BrandName}" />
                                 <GridViewColumn Header="Model" DisplayMemberBinding="{Binding Path=Model}" />
+                                <GridViewColumn Header="Hardware Serial NO" DisplayMemberBinding="{Binding Path=HardwareSerialNo}" />
                                 <GridViewColumn Header="Tag NO." DisplayMemberBinding="{Binding Path=HardwareTagNo}" />
                                 <GridViewColumn Header="Receive Date" DisplayMemberBinding="{Binding Path=ReceiveDate,Converter={StaticResource DateTimeToStringConverter}}" />
                                 <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Path=Status}" />

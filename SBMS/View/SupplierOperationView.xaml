@@ -48,7 +48,7 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="User Name: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Supplier Name: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
             <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding Name}" Margin="5"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Address: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold" />

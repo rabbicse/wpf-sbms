@@ -29,9 +29,38 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <WrapPanel Grid.Row="0" Margin="10, 10, 10, 0">
-                        <Button Content="Add Circular" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" />
-                    </WrapPanel>
+                    <Grid Grid.Row="0" Margin="10, 10, 10, 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" VerticalAlignment="Top" Margin="10,5,10,5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Search By: " VerticalAlignment="Center" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Margin="5"/>
+
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="Search Term: " VerticalAlignment="Center" HorizontalAlignment="Right" />
+                            <ComboBox Grid.Row="0" Grid.Column="3" ItemsSource="{Binding Categories}" SelectedItem="{Binding Category}" Margin="5"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" Text="From: " VerticalAlignment="Center" HorizontalAlignment="Right" />
+                            <DatePicker Grid.Row="1" Grid.Column="1" SelectedDate="{Binding ReceiveDate, Mode=TwoWay}" Margin="5"/>
+                            <TextBlock Grid.Row="1" Grid.Column="2" Text="To: " VerticalAlignment="Center" HorizontalAlignment="Right" />
+                            <DatePicker Grid.Row="1" Grid.Column="3" SelectedDate="{Binding ReceiveDate, Mode=TwoWay}" Margin="5"/>
+                        </Grid>
+                        <StackPanel Grid.Column="1" Margin="10, 10, 10, 0">
+                            <Button Content="Add Circular" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" Margin="5,0, 5, 5" />
+                            <Button Content="Search" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding SearchCommand, IsAsync=True}" Margin="5, 0, 5, 5" />
+                        </StackPanel>
+                    </Grid>
                     <ListView Grid.Row="1" ItemsSource="{Binding AppUserCollection, IsAsync=True}" SelectedItem="{Binding SelectedHardware}" AlternationCount="2" AutomationProperties.AutomationId="1"
                               IsSynchronizedWithCurrentItem="True" Margin="10">
                         <ListView.View>

@@ -43,6 +43,29 @@ namespace SBMS.ViewModel
         }
         #endregion
 
+        #region Popup
+        private bool _isShowPopup;
+        public bool IsShowPopup
+        {
+            get { return _isShowPopup; }
+            set
+            {
+                _isShowPopup = value;
+                OnPropertyChanged(() => IsShowPopup);
+            }
+        }
+        private object _popupContent;
+        public object PopupContent
+        {
+            get { return _popupContent; }
+            set
+            {
+                _popupContent = value;
+                OnPropertyChanged(() => PopupContent);
+            }
+        }
+        #endregion
+
         #region ViewModel(s)
         private SupplierOperationViewModel _supplierOperationVM;
         public SupplierOperationViewModel SupplierOperationVM

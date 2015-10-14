@@ -33,17 +33,17 @@ namespace SBMS.ViewModel
         {
             get { return _hardwares; }
         }
-        private Hardware _currentHardware;
-        public Hardware CurrentHardware
-        {
-            get { return _currentHardware; }
-            set
-            {
-                _currentHardware = value;                
-                OnPropertyChanged(() => CurrentHardware);
-            }
-        }
-        
+        //private Hardware _currentHardware;
+        //public Hardware CurrentHardware
+        //{
+        //    get { return _currentHardware; }
+        //    set
+        //    {
+        //        _currentHardware = value;                
+        //        OnPropertyChanged(() => CurrentHardware);
+        //    }
+        //}
+
         private string _name;
         public string Name
         {
@@ -108,7 +108,7 @@ namespace SBMS.ViewModel
             Name = user.Name;
             Designation = user.Designation;
             Department = user.Department;
-            CurrentHardware = Hardwares.Where(h => h.SerialNo == user.HardwareSerial).FirstOrDefault();
+            //CurrentHardware = Hardwares.Where(h => h.SerialNo == user.HardwareSerial).FirstOrDefault();
             Comments = user.Comments;
         }
         private void CloseCommandAction(object obj)
@@ -127,7 +127,7 @@ namespace SBMS.ViewModel
                 Name = Name,
                 Designation = Designation,
                 Department = Department,
-                HardwareSerial = CurrentHardware.SerialNo,
+                //HardwareSerial = CurrentHardware.SerialNo,
                 Comments = Comments
             };
             await DbHandler.Instance.SaveUser(user);

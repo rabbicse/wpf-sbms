@@ -25,7 +25,7 @@ namespace SBMS.ViewModel
         #endregion
 
         #region Property(s)
-        public string Tag { get { return "User"; } }
+        public string Tag { get { return "Computer User"; } }
         private Lazy<OptimizedObservableCollection<User>> _userCollection;
         public OptimizedObservableCollection<User> UserCollection
         {
