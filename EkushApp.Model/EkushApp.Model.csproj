@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BbCircular.cs" />
+    <Compile Include="BbCircularSearch.cs" />
     <Compile Include="Hardware.cs" />
     <Compile Include="Header.cs" />
     <Compile Include="Report.cs" />

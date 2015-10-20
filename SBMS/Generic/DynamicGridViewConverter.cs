@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 
@@ -21,6 +22,8 @@ namespace SBMS.Generic
                     var binding = new Binding(column.DataField);
                     grdiView.Columns.Add(new GridViewColumn { Header = column.Header, DisplayMemberBinding = binding });
                 }
+                var dataTemplate = Application.Current.FindResource("GenericEditDeleteTemplate") as DataTemplate;
+                grdiView.Columns.Add(new GridViewColumn { Header = "Actions", CellTemplate = dataTemplate});
                 return grdiView;
             }
             return Binding.DoNothing;

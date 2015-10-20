@@ -1,10 +1,12 @@
-﻿using EkushApp.ShellService.Commands;
+﻿using EkushApp.Model;
+using EkushApp.ShellService.Commands;
 using EkushApp.ShellService.MVVM;
 using EkushApp.Utility.Extensions;
 using SBMS.Generic;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -46,6 +48,16 @@ namespace SBMS.ViewModel
         {
             get { return _collection.Value; }
         }
+        private T _selectedItem;
+        public T SelectedItem
+        {
+            get { return _selectedItem; }
+            set
+            {
+                _selectedItem = value;
+                OnPropertyChanged(() => SelectedItem);
+            }
+        }
         #endregion
 
         #region Constructor(s)
@@ -76,6 +88,21 @@ namespace SBMS.ViewModel
         #region ViewModelBase
         public override void OnLoad()
         {
+            List<Column> columns = new List<Column>();
+            PropertyInfo[] props = typeof(T).GetProperties();
+            foreach (PropertyInfo prop in props)
+            {
+                object[] attrs = prop.GetCustomAttributes(true);
+                foreach (object attr in attrs)
+                {
+                    if (attr != null && attr is Header)
+                    {
+                        Header header = (Header)attr;
+                        columns.Add(new Column { Header = header.Name, DataField = prop.Name });
+                    }
+                }
+            }
+            ColumnConfiguration = new ColumnConfig { Columns = columns };
         }
 
         public override void OnClosing()

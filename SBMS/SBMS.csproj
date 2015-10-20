@@ -98,6 +98,7 @@
     <Compile Include="ViewModel\AppUserOperatorViewModel.cs" />
     <Compile Include="ViewModel\AppUserViewModel.cs" />
     <Compile Include="ViewModel\BbCircularViewModel.cs" />
+    <Compile Include="ViewModel\BbSearchViewModel.cs" />
     <Compile Include="ViewModel\GenericViewModel.cs" />
     <Compile Include="ViewModel\HardwareOperationViewModel.cs" />
     <Compile Include="ViewModel\HardwareViewModel.cs" />
@@ -119,6 +120,12 @@
     </Compile>
     <Compile Include="View\BbCircularView.xaml.cs">
       <DependentUpon>BbCircularView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BbSearchOperationView.xaml.cs">
+      <DependentUpon>BbSearchOperationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BbSearchView.xaml.cs">
+      <DependentUpon>BbSearchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\GenericOperation.xaml.cs">
       <DependentUpon>GenericOperation.xaml</DependentUpon>
@@ -243,6 +250,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\BbCircularView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BbSearchOperationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BbSearchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

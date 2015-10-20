@@ -139,6 +139,18 @@ namespace SBMS.ViewModel
                 return _bbCircularVM;
             }
         }
+        private BbSearchViewModel _bbSearchVM;
+        public BbSearchViewModel BbSearchVM
+        {
+            get
+            {
+                if (_bbSearchVM == null)
+                {
+                    _bbSearchVM = ShellContainer.GetExportedInstance<BbSearchViewModel>();
+                }
+                return _bbSearchVM;
+            }
+        }
         #endregion
 
         #region Constructor(s)
@@ -185,6 +197,7 @@ namespace SBMS.ViewModel
             TabCollection.Add(UserVM);
             TabCollection.Add(SupplierVM);
             TabCollection.Add(ReportVM);
+            TabCollection.Add(BbSearchVM);
             TabCollection.Add(BbCircularVM);
             SelectedTab = TabCollection.FirstOrDefault();
         }

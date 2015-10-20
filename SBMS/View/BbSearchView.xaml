@@ -1,0 +1,50 @@
+﻿<ViewBase:UserControlBase x:Class="SBMS.View.BbSearchView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"
+             xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls"
+             xmlns:appConverter="clr-namespace:SBMS.Infrastructure.Converter;assembly=SBMS.Infrastructure"
+             xmlns:controls="clr-namespace:EkushApp.WpfControls.Controls;assembly=EkushApp.WpfControls"
+             xmlns:generic="clr-namespace:SBMS.Generic">
+    <ViewBase:UserControlBase.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <appConverter:DateTimeToStringConverter x:Key="DateTimeToStringConverter" />
+        <generic:DynamicGridViewConverter x:Key="GenericConverter" />
+    </ViewBase:UserControlBase.Resources>
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1" Margin="10, 10, 20, 20">
+                <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" Width="Auto" Background="White" Opacity="0.5" BorderBrush="White" CornerRadius="12" BorderThickness="2">
+                    <Border.Effect>
+                        <DropShadowEffect Direction="320" ShadowDepth="10" BlurRadius="20" Color="Green" />
+                    </Border.Effect>
+                </Border>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0" Margin="10, 10, 10, 0">
+                        <Button HorizontalAlignment="Left" VerticalAlignment="Center" Content="Add Search" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" Margin="5,5, 5, 5" />
+                    </Grid>
+                    <ListView Grid.Row="1" ItemsSource="{Binding Collection, IsAsync=True}" SelectedItem="{Binding SelectedItem}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" View="{Binding ColumnConfiguration, Converter={StaticResource GenericConverter}}">
+                    </ListView>
+                </Grid>
+            </Grid>
+        </Grid>
+        <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Visibility="{Binding Path=IsShowPopup, Mode=OneWay, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Border HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Black" Opacity="0.6" />
+            <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Background="Transparent">
+                <ContentControl Content="{Binding PopupContent, Mode=OneWay}" />
+            </DockPanel>
+        </Grid>
+    </Grid>
+</ViewBase:UserControlBase>
