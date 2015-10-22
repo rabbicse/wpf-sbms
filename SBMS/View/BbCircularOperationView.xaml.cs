@@ -1,5 +1,7 @@
-﻿using System;
+﻿using EkushApp.ShellService.MVVM;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,11 +20,15 @@ namespace SBMS.View
     /// <summary>
     /// Interaction logic for BbCircularOperationView.xaml
     /// </summary>
-    public partial class BbCircularOperationView : UserControl
+    /// 
+    [Export(typeof(IBbCircularOperationView))]
+    [PartCreationPolicy(CreationPolicy.NonShared)]
+    public partial class BbCircularOperationView : UserControlBase, IBbCircularOperationView
     {
         public BbCircularOperationView()
         {
             InitializeComponent();
         }
     }
+    public interface IBbCircularOperationView : IView { }
 }

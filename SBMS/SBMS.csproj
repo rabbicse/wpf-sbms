@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Generic\Column.cs" />
     <Compile Include="Generic\ColumnConfig.cs" />
+    <Compile Include="Generic\DynamicControlConverter.cs" />
     <Compile Include="Generic\DynamicGridViewConverter.cs" />
     <Compile Include="Reports\ReportGenerator.cs" />
     <Compile Include="Splash\SplashWindow.xaml.cs">
@@ -97,8 +98,11 @@
     </Compile>
     <Compile Include="ViewModel\AppUserOperatorViewModel.cs" />
     <Compile Include="ViewModel\AppUserViewModel.cs" />
+    <Compile Include="ViewModel\BbCircularOperationViewModel.cs" />
     <Compile Include="ViewModel\BbCircularViewModel.cs" />
+    <Compile Include="ViewModel\BbSearchOperationViewModel.cs" />
     <Compile Include="ViewModel\BbSearchViewModel.cs" />
+    <Compile Include="ViewModel\GenericOperationViewModel.cs" />
     <Compile Include="ViewModel\GenericViewModel.cs" />
     <Compile Include="ViewModel\HardwareOperationViewModel.cs" />
     <Compile Include="ViewModel\HardwareViewModel.cs" />

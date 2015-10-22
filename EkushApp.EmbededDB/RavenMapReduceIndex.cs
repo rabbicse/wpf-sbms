@@ -32,7 +32,7 @@ namespace EkushApp.EmbededDB
                                };
         }
     }
-    
+
     public class UserMapReduceIndex : AbstractIndexCreationTask<User>
     {
         public UserMapReduceIndex()
@@ -54,6 +54,31 @@ namespace EkushApp.EmbededDB
                                {
                                    supplier.Id,
                                    supplier.Name
+                               };
+        }
+    }
+    public class BbSearchTermMapReduceIndex : AbstractIndexCreationTask<BbCircularSearch>
+    {
+        public BbSearchTermMapReduceIndex()
+        {
+            Map = searchTerms => from searchTerm in searchTerms
+                                 select new
+                                 {
+                                     searchTerm.SearchKey,
+                                     searchTerm.SearchTermKey
+                                 };
+        }
+    }
+    public class BbCircularMapReduceIndex : AbstractIndexCreationTask<BbCircular>
+    {
+        public BbCircularMapReduceIndex()
+        {
+            Map = circulars => from circular in circulars
+                               select new
+                               {
+                                   circular.SearchTermKey,
+                                   circular.Title,
+                                   circular.PublishDate
                                };
         }
     }

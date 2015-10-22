@@ -1,4 +1,5 @@
-﻿using EkushApp.Model;
+﻿using EkushApp.EmbededDB;
+using EkushApp.Model;
 using EkushApp.ShellService.Commands;
 using EkushApp.ShellService.MVVM;
 using EkushApp.Utility.Extensions;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SBMS.ViewModel
 {
-    public class GenericViewModel<T> : ViewModelBase
+    public class GenericViewModel<T1, T2> : ViewModelBase
     {
         #region Command(s)
         public CommandHandler<object, object> NewCommand { get; private set; }
@@ -43,13 +44,13 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => ColumnConfiguration);
             }
         }
-        private Lazy<OptimizedObservableCollection<T>> _collection;
-        public OptimizedObservableCollection<T> Collection
+        private Lazy<OptimizedObservableCollection<T1>> _collection;
+        public OptimizedObservableCollection<T1> Collection
         {
             get { return _collection.Value; }
         }
-        private T _selectedItem;
-        public T SelectedItem
+        private T1 _selectedItem;
+        public T1 SelectedItem
         {
             get { return _selectedItem; }
             set
@@ -60,10 +61,25 @@ namespace SBMS.ViewModel
         }
         #endregion
 
+        #region ViewModel(s)
+        protected T2 _operationVM;
+        public T2 OperationVM
+        {
+            get
+            {
+                if (_operationVM == null)
+                {
+                    _operationVM = ShellContainer.GetExportedInstance<T2>();
+                }
+                return _operationVM;
+            }
+        }
+        #endregion
+
         #region Constructor(s)
         public GenericViewModel()
         {
-            _collection = new Lazy<OptimizedObservableCollection<T>>();
+            _collection = new Lazy<OptimizedObservableCollection<T1>>();
             NewCommand = new CommandHandler<object, object>(NewCommandAction);
             EditCommand = new CommandHandler<object, object>(EditCommandAction);
             DeleteCommand = new CommandHandler<object, object>(DeleteCommandAction);
@@ -72,8 +88,7 @@ namespace SBMS.ViewModel
 
         #region Command Manager(s)
         public virtual void NewCommandAction(object obj)
-        {
-            Console.WriteLine("test...");
+        {            
         }
         public void EditCommandAction(object obj)
         {
@@ -85,11 +100,19 @@ namespace SBMS.ViewModel
         }
         #endregion
 
+        #region Method(s)
+        public void OnCloseOperation() 
+        {
+            PopupContent = null;
+            IsShowPopup = false;
+        }
+        #endregion
+
         #region ViewModelBase
         public override void OnLoad()
         {
             List<Column> columns = new List<Column>();
-            PropertyInfo[] props = typeof(T).GetProperties();
+            PropertyInfo[] props = typeof(T1).GetProperties();
             foreach (PropertyInfo prop in props)
             {
                 object[] attrs = prop.GetCustomAttributes(true);
@@ -103,10 +126,19 @@ namespace SBMS.ViewModel
                 }
             }
             ColumnConfiguration = new ColumnConfig { Columns = columns };
+            LoadCollection();
+        }
+
+        private async void LoadCollection() 
+        {
+            List<T1> collection = await DbHandler.Instance.GetAllData<T1>();
+            Collection.Clear();
+            Collection.AddRange(collection);
         }
 
         public override void OnClosing()
         {
+            Collection.Clear();
         }
         #endregion
     }

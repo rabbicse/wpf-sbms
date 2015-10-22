@@ -75,6 +75,7 @@ namespace SBMS
 
             DbHandler.DatabasePath = Globals.EmbededDB.DB_PATH;
             DbHandler.DbFilePath = Globals.EmbededDB.DB_FILE_PATH;
+            await DbHandler.Instance.ResetIndexes();
 
             // TODO TEST, Here we'll delete dirty records etc. before start
             var users = await DbHandler.Instance.GetUsers();

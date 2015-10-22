@@ -98,10 +98,17 @@ namespace EkushApp.EmbededDB
             IndexCreation.CreateIndexes(typeof(HardwareMapIndex).Assembly, DocumentStore);
             IndexCreation.CreateIndexes(typeof(SupplierMapReduceIndex).Assembly, DocumentStore);
             IndexCreation.CreateIndexes(typeof(UserMapReduceIndex).Assembly, DocumentStore);
+            IndexCreation.CreateIndexes(typeof(BbSearchTermMapReduceIndex).Assembly, DocumentStore);
+            IndexCreation.CreateIndexes(typeof(BbCircularMapReduceIndex).Assembly, DocumentStore);
         }
         ~DbHandler()
         {
             Dispose(false);
+        }
+        public async Task ResetIndexes()
+        {
+            await DocumentStore.AsyncDatabaseCommands.ResetIndexAsync("BbSearchTermMapReduceIndex");
+            await DocumentStore.AsyncDatabaseCommands.ResetIndexAsync("BbCircularMapReduceIndex");
         }
         #endregion
 
@@ -406,6 +413,201 @@ namespace EkushApp.EmbededDB
             {
                 Log.Error("Error when delete hardware.", x);
             }
+        }
+        #endregion
+
+        #region BbSearch
+        public async Task<List<BbCircularSearch>> GetSearchTermCollection(string searchKey)
+        {
+            List<BbCircularSearch> collection = new List<BbCircularSearch>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var list = await session.Advanced.AsyncDocumentQuery<BbCircularSearch, BbSearchTermMapReduceIndex>()
+                        .WhereEquals("SearchKey", searchKey)
+                        .WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    if (list != null && list.Count > 0)
+                    {
+                        collection.AddRange(list);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return collection;
+        }
+        #endregion
+
+        #region BbCircular(s)
+        public async Task<bool> SaveBbCircularData(BbCircular bbCircular, string fileWithFullPath)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    await session.StoreAsync(bbCircular);
+                    await session.SaveChangesAsync();
+                }
+                using (var fileSession = FileStore.OpenAsyncSession())
+                {
+                    var stream = File.OpenRead(fileWithFullPath);
+                    var metadata = new RavenJObject
+                    {
+                        {"File", bbCircular.FileName},
+                    };
+                    fileSession.RegisterUpload("file/" + bbCircular.FileName, stream, metadata);
+                    await fileSession.SaveChangesAsync(); // actually upload the file
+                }
+                return true;
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save user data.", x);
+            }
+            return false;
+        }
+        public async Task<List<BbCircular>> SearchCircularBySearchKey(string searchKey)
+        {
+            List<BbCircular> collection = new List<BbCircular>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .Search("SearchTermKey", searchKey)
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .ToListAsync();
+                    if (list != null && list.Count > 0)
+                    {
+                        collection.AddRange(list);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return collection;
+        }
+        public async Task<List<BbCircular>> SearchCircularByTitle(string title)
+        {
+            List<BbCircular> collection = new List<BbCircular>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .Search("Title", title)
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .ToListAsync();
+                    if (list != null && list.Count > 0)
+                    {
+                        collection.AddRange(list);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return collection;
+        }
+        public async Task<List<BbCircular>> SearchCircularByPubDate(DateTime from, DateTime to)
+        {
+            List<BbCircular> collection = new List<BbCircular>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .WhereBetween(x => x.PublishDate, from.Date, to.Date)
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .ToListAsync();
+                    if (list != null && list.Count > 0)
+                    {
+                        collection.AddRange(list);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return collection;
+        }
+        public async Task<bool> DownloadFile(string filename, string savePath)
+        {
+            Stream stream = null;
+            try
+            {
+                using (var session = FileStore.OpenAsyncSession())
+                {
+                    var file = await session.Query()
+                                    .WhereEquals("File", filename)
+                                    .FirstOrDefaultAsync();
+
+                    stream = await session.DownloadAsync("file/" + filename);
+
+                    using (FileStream fs = File.Create(Path.Combine(savePath, filename)))
+                    {
+                        await stream.CopyToAsync(fs);
+                    }
+                    return true;
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("There was an error when downloading file.", x);
+            }
+            finally
+            {
+                if (stream != null) stream.Close();
+            }
+            return false;
+        }
+        #endregion
+
+        #region Generic(s)
+        public async Task<bool> SaveData<T>(T data)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    await session.StoreAsync(data);
+                    await session.SaveChangesAsync();
+                    return true;
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save data.", x);
+            }
+            return false;
+        }
+        public async Task<List<T>> GetAllData<T>()
+        {
+            List<T> dataCollection = new List<T>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var dataList = await session.Advanced.AsyncDocumentQuery<T>()
+                        .WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                    if (dataList != null && dataList.Count > 0)
+                    {
+                        dataCollection.AddRange(dataList);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return dataCollection;
         }
         #endregion
 

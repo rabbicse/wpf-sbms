@@ -1,4 +1,5 @@
 ﻿using EkushApp.Model;
+using EkushApp.ShellService.MVVM;
 using SBMS.Generic;
 using SBMS.View;
 using System;
@@ -14,7 +15,7 @@ namespace SBMS.ViewModel
 {
     [Export]
     [PartCreationPolicy(CreationPolicy.NonShared)]
-    public class BbSearchViewModel : GenericViewModel<BbCircularSearch>
+    public class BbSearchViewModel : GenericViewModel<BbCircularSearch, BbSearchOperationViewModel>
     {
         #region Constructor(s)
         [ImportingConstructor]
@@ -23,14 +24,38 @@ namespace SBMS.ViewModel
             View = view;
             View.ViewModel = this;
             ShellContainer = compositionContainer;
-            Tag = "BB Search Category";
+            Tag = "BB Search Category";            
+        }
+
+        public void OperationVM_OnClosed(object sender, EventArgs e)
+        {
+            OnCloseOperation();
+            OperationVM.OnClosed -= OperationVM_OnClosed;
+            _operationVM = null;
+            base.OnLoad();
         }
         #endregion
 
+        #region Command Handler(s)
+        public override void NewCommandAction(object obj)
+        {
+            base.NewCommandAction(obj);
+            OperationVM.OnClosed += OperationVM_OnClosed;
+            PopupContent = ((ViewModelBase)OperationVM).View;
+            IsShowPopup = true;
+        }
+        #endregion
+
+        #region ViewModelBase
         public override void OnLoad()
         {
             base.OnLoad();
-            Collection.Add(new BbCircularSearch { Title = "Test", PublishDate = DateTime.Now });
         }
+        public override void OnClosing()
+        {
+            base.OnClosing();
+            this.Dispose();
+        }
+        #endregion
     }
 }

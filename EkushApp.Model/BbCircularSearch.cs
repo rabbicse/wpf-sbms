@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Raven.Client.UniqueConstraints;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,21 @@ namespace EkushApp.Model
 {
     public class BbCircularSearch
     {
-        [Header("Circular Search Category")]
-        public string Title { get; set; }
-        [Header("Publish Date")]
-        public DateTime PublishDate { get; set; }
+        [Header("Search By Key")]
+        public string SearchKey { get; set; }
+        [Header("Search By")]
+        public string SearchByName { get; set; }
+        [Header("Search Term Key")]
+        public string SearchTermKey { get; set; }
+        [Header("Search Term")]
+        public string SearchTerm { get; set; }
+    }
+    public class BbSearchBy 
+    {
+        [UniqueConstraint]
+        [Header("Search By Key")]
+        public string SearchKey { get; set; }
+        [Header("Search By")]
+        public string SearchByName { get; set; }
     }
 }
