@@ -79,6 +79,16 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EkushApp.Model\EkushApp.Model.csproj">
+      <Project>{0d3f594d-5102-4555-87be-73d259f6ef06}</Project>
+      <Name>EkushApp.Model</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EkushApp.Utility\EkushApp.Utility.csproj">
+      <Project>{5155f1fd-7a71-4e7c-af47-18c6b250b342}</Project>
+      <Name>EkushApp.Utility</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

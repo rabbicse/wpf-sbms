@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             mc:Ignorable="d" 
              xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"
              xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls"
              xmlns:appConverter="clr-namespace:SBMS.Infrastructure.Converter;assembly=SBMS.Infrastructure"
@@ -30,12 +29,20 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
-                    <Grid Grid.Row="0" Margin="10, 10, 10, 0">
+                    <TextBlock Margin="10" FontWeight="Bold" Grid.Row="0" Text="Department" />
+                    <Grid Grid.Row="1" Margin="10, 10, 10, 0">
                         <Button HorizontalAlignment="Left" VerticalAlignment="Center" Content="Add Search" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" Margin="5,5, 5, 5" />
                     </Grid>
-                    <ListView Grid.Row="1" ItemsSource="{Binding Collection, IsAsync=True}" SelectedItem="{Binding SelectedItem}" AlternationCount="2" AutomationProperties.AutomationId="1"
-                              IsSynchronizedWithCurrentItem="True" Margin="10" View="{Binding ColumnConfiguration, Converter={StaticResource GenericConverter}}">
+                    <ListView Grid.Row="2" ItemsSource="{Binding DepartmentCollection, IsAsync=True}" SelectedItem="{Binding SelectedItem}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" View="{Binding DeptColumnConfiguration, Converter={StaticResource GenericConverter}}">
+                    </ListView>
+                    <TextBlock Margin="10" FontWeight="Bold" Grid.Row="3" Text="Category" />
+                    <ListView Grid.Row="4" ItemsSource="{Binding CategoryCollection, IsAsync=True}" SelectedItem="{Binding SelectedItem}" AlternationCount="2" AutomationProperties.AutomationId="1"
+                              IsSynchronizedWithCurrentItem="True" Margin="10" View="{Binding CategoryColumnConfiguration, Converter={StaticResource GenericConverter}}">
                     </ListView>
                 </Grid>
             </Grid>

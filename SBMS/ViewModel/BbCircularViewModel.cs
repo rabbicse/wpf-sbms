@@ -4,6 +4,7 @@ using EkushApp.ShellService.Commands;
 using EkushApp.ShellService.MVVM;
 using EkushApp.Utility.Extensions;
 using SBMS.Generic;
+using SBMS.Infrastructure;
 using SBMS.View;
 using System;
 using System.Collections.Generic;
@@ -69,8 +70,8 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => Title);
             }
         }
-        private DateTime _dateFrom = DateTime.Now;
-        public DateTime DateFrom
+        private DateTime? _dateFrom;
+        public DateTime? DateFrom
         {
             get { return _dateFrom; }
             set
@@ -79,8 +80,8 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => DateFrom);
             }
         }
-        private DateTime _dateTo = DateTime.Now;
-        public DateTime DateTo
+        private DateTime? _dateTo;
+        public DateTime? DateTo
         {
             get { return _dateTo; }
             set
@@ -134,12 +135,13 @@ namespace SBMS.ViewModel
             _bbSearchByCollection = new OptimizedObservableCollection<BbSearchBy>();
             _bbSearchtermCollection = new OptimizedObservableCollection<BbCircularSearch>();
         }
-        public void OperationVM_OnClosed(object sender, EventArgs e)
+        public async void OperationVM_OnClosed(object sender, EventArgs e)
         {
             OnCloseOperation();
             OperationVM.OnClosed -= OperationVM_OnClosed;
             _operationVM = null;
             LoadSearches();
+            await LoadSearchResults();
         }
         #endregion
 
@@ -167,28 +169,8 @@ namespace SBMS.ViewModel
         }
         private async void SearchCommandAction(object obj)
         {
-            Collection.Clear();
-            if (SelectedSearchBy.SearchKey.Equals("DATE_WISE"))
-            {
-                List<BbCircular> list = await DbHandler.Instance.SearchCircularByPubDate(DateFrom, DateTo);
-                Collection.AddRange(list);
-            }
-            else if (SelectedSearchBy.SearchKey.Equals("TITLE_WISE"))
-            {
-                List<BbCircular> list = await DbHandler.Instance.SearchCircularByTitle(Title);
-                Collection.AddRange(list);
-
-            }
-            else if (SelectedSearchBy.SearchKey.Equals("RECENT_ALL"))
-            {
-                List<BbCircular> list = await DbHandler.Instance.GetRecentCircular();
-                Collection.AddRange(list);
-            }
-            else
-            {
-                List<BbCircular> list = await DbHandler.Instance.SearchCircularBySearchKey(BbSelectedSearchTerm.SearchTermKey);
-                Collection.AddRange(list);
-            }
+            Start = 0;
+            await LoadSearchResults();
         }
         private async void DownloadCommandAction(object obj)
         {
@@ -216,41 +198,117 @@ namespace SBMS.ViewModel
         }
         #endregion
 
+        #region Pagination Command(s)
+        protected override async void FirstCommandAction(object obj)
+        {
+            base.FirstCommandAction(obj);
+            await LoadSearchResults();
+        }
+        protected override async void LastCommandAction(object obj)
+        {
+            base.LastCommandAction(obj);
+            await LoadSearchResults();
+        }
+        protected override async void NextCommandAction(object obj)
+        {
+            base.NextCommandAction(obj);
+            await LoadSearchResults();
+        }
+        protected override async void PrevCommandAction(object obj)
+        {
+            base.PrevCommandAction(obj);
+            await LoadSearchResults();
+        }
+        #endregion
+
         #region Method(s)
         private async void LoadSearches()
         {
             IsShowPubDate = false;
             IsShowSearchTerm = false;
             IsShowTitle = false;
+            DateFrom = (DateTime?)null;
+            DateTo = (DateTime?)null;
             BbSearchTermCollection.Clear();
-            List<BbCircularSearch> collection = await DbHandler.Instance.GetSearchTermCollection(SelectedSearchBy.SearchKey);
-            BbSearchTermCollection.AddRange(collection);
+            if (SelectedSearchBy == null)
+            {
+                return;
+            }
+            switch (SelectedSearchBy.SearchKey)
+            {
+                case Globals.SearchKey.DEPARTMENT_WISE:
+                    var depCollection = await DbHandler.Instance.GetAllData<BbDepartment>();
+                    BbSearchTermCollection.AddRange(depCollection.Select(c => new BbCircularSearch { SearchKey = c.Key, SearchName = c.Name }));
+                    IsShowSearchTerm = true;
+                    IsShowPubDate = true;
+                    break;
+                case Globals.SearchKey.CATEGORY_WISE:
+                    var catCollection = await DbHandler.Instance.GetAllData<BbCategory>();
+                    BbSearchTermCollection.AddRange(catCollection.Select(c => new BbCircularSearch { SearchKey = c.Key, SearchName = c.Name }));
+                    IsShowSearchTerm = true;
+                    IsShowPubDate = true;
+                    break;
+                case Globals.SearchKey.TITLE_WISE:
+                    IsShowTitle = true;
+                    IsShowPubDate = true;
+                    break;
+                case Globals.SearchKey.DATE_WISE:
+                    IsShowPubDate = true;
+                    break;
+                case Globals.SearchKey.RECENT_ALL:
+                    break;
+            }
+        }
+        private async Task LoadSearchResults()
+        {
+            Collection.Clear();
+            List<BbCircular> list = new List<BbCircular>();
+            if (SelectedSearchBy == null)
+            {
+                SelectedSearchBy = new BbSearchBy { SearchKey = Globals.SearchKey.RECENT_ALL };
+            }
+            switch (SelectedSearchBy.SearchKey)
+            {
+                case Globals.SearchKey.DEPARTMENT_WISE:
+                    list = await DbHandler.Instance.SearchCircularByDept(BbSelectedSearchTerm.SearchKey, DateFrom, DateTo, t => Total = t, Start, Max);
+                    Collection.AddRange(list);
+                    break;
+                case Globals.SearchKey.CATEGORY_WISE:
+                    list = await DbHandler.Instance.SearchCircularByCategory(BbSelectedSearchTerm.SearchKey, DateFrom, DateTo, t => Total = t, Start, Max);
+                    Collection.AddRange(list);
+                    break;
+                case Globals.SearchKey.TITLE_WISE:
+                    list = await DbHandler.Instance.SearchCircularByTitle(Title, DateFrom, DateTo, t => Total = t, Start, Max);
+                    Collection.AddRange(list);
+                    break;
+                case Globals.SearchKey.DATE_WISE:
+                    list = await DbHandler.Instance.SearchCircularByPubDate(DateFrom.Value, DateTo.Value, t => Total = t, Start, Max);
+                    Collection.AddRange(list);
+                    break;
+                case Globals.SearchKey.RECENT_ALL:
+                default:
+                    list = await DbHandler.Instance.GetRecentCircular(t => Total = t, Start, Max);
+                    Collection.AddRange(list);
+                    break;
+            }
 
-            if (SelectedSearchBy.SearchKey.Equals("DATE_WISE"))
-            {
-                IsShowPubDate = true;
-            }
-            else if (SelectedSearchBy.SearchKey.Equals("RECENT_ALL"))
-            {
-                IsShowPubDate = true;
-            }
-            else if (SelectedSearchBy.SearchKey.Equals("TITLE_WISE"))
-            {
-                IsShowTitle = true;
-            }
-            else
-            {
-                IsShowSearchTerm = true;
-            }
+            OnCalculatePagination();
         }
         #endregion
 
         #region ViewModelBase
-        public override async void OnLoad()
+        public override void OnLoad()
         {
-            List<BbSearchBy> searchByCollection = await DbHandler.Instance.GetAllData<BbSearchBy>();
             BbSearchByCollection.Clear();
-            BbSearchByCollection.AddRange(searchByCollection);
+            FieldInfo[] fields = typeof(Globals.SearchKey).GetFields();
+            foreach (FieldInfo field in fields)
+            {
+                var header = field.GetCustomAttributes(true).FirstOrDefault(f => f is Header);
+                if (header != null)
+                {
+                    BbSearchByCollection.Add(new BbSearchBy { SearchName = ((Header)header).Name, SearchKey = (string)field.GetValue(field) });
+                }
+            }
             base.OnLoad();
         }
 

@@ -10,7 +10,7 @@
                 <ResourceDictionary Source="pack://application:,,,/EkushApp.WpfControls;component/Styles/ProgressBarStyle.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-
+            <SolidColorBrush x:Key="darkGrey" Color="#767676" />
             <DataTemplate x:Key="GenericEditDeleteTemplate">
                 <Grid>
                     <Grid.ColumnDefinitions>

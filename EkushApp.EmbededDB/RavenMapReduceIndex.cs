@@ -65,7 +65,6 @@ namespace EkushApp.EmbededDB
                                  select new
                                  {
                                      searchTerm.SearchKey,
-                                     searchTerm.SearchTermKey
                                  };
         }
     }
@@ -76,9 +75,11 @@ namespace EkushApp.EmbededDB
             Map = circulars => from circular in circulars
                                select new
                                {
-                                   circular.SearchTermKey,
+                                   circular.Tag,
+                                   circular.DepartmentKey,
+                                   circular.CategoryKey,
                                    circular.Title,
-                                   circular.PublishDate
+                                   Published = circular.PublishDate.Date
                                };
         }
     }

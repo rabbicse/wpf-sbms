@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:ViewBase="clr-namespace:EkushApp.ShellService.MVVM;assembly=EkushApp.ShellService"
              xmlns:converter="clr-namespace:EkushApp.WpfControls.Converter;assembly=EkushApp.WpfControls">
-    <Grid Background="White" Width="500" Height="250">
+    <Grid Background="White" Width="500" Height="280">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -46,20 +46,23 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Search Term: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
-            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding SearchTermCollection}" DisplayMemberPath="SearchTerm" SelectedItem="{Binding SelectedSearchTerm}" Margin="5"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Department: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
+            <ComboBox Grid.Row="0" Grid.Column="1" ItemsSource="{Binding DeptCollection}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedDept}" Margin="5"/>
 
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="Circular Title: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Title}" Margin="5"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="Category: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
+            <ComboBox Grid.Row="1" Grid.Column="1" ItemsSource="{Binding CategoryCollection}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedCategory}" Margin="5"/>
+            
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Circular Title: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
+            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Title}" Margin="5"/>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="File Path: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
-            <WrapPanel Grid.Row="2" Grid.Column="1" Margin="5">
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="File Path: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
+            <WrapPanel Grid.Row="3" Grid.Column="1" Margin="5">
                 <TextBox  Text="{Binding SelectedFile}" Width="120"/>
                 <Button Width="80" Margin="20,0,0,0" Height="25" Content="Browse" Cursor="Hand" Command="{Binding BrowseFileCommand}" />
             </WrapPanel>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Publish Date: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
-            <DatePicker Grid.Row="3" Grid.Column="1" SelectedDate="{Binding PubDate, Mode=TwoWay}" Margin="5"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Publish Date: " Margin="5" HorizontalAlignment="Right" FontWeight="Bold"/>
+            <DatePicker Grid.Row="4" Grid.Column="1" SelectedDate="{Binding PubDate, Mode=TwoWay}" Margin="5"/>
         </Grid>
         <WrapPanel Grid.Row="2" FlowDirection="RightToLeft" Margin="10">
             <Button Width="80" Height="25" Content="Save" Cursor="Hand" Command="{Binding SaveCommand}" />

@@ -23,20 +23,35 @@ namespace SBMS.ViewModel
         #endregion
 
         #region Property(s)
-        private BbCircularSearch _selectedSearchTerm;
-        public BbCircularSearch SelectedSearchTerm
+        private BbDepartment _selectedDept;
+        public BbDepartment SelectedDept
         {
-            get { return _selectedSearchTerm; }
+            get { return _selectedDept; }
             set
             {
-                _selectedSearchTerm = value;
-                OnPropertyChanged(() => SelectedSearchTerm);
+                _selectedDept = value;
+                OnPropertyChanged(() => SelectedDept);
             }
         }
-        private OptimizedObservableCollection<BbCircularSearch> _searchTermCollection;
-        public OptimizedObservableCollection<BbCircularSearch> SearchTermCollection
+        private BbCategory _selectedCategory;
+        public BbCategory SelectedCategory
         {
-            get { return _searchTermCollection; }
+            get { return _selectedCategory; }
+            set
+            {
+                _selectedCategory = value;
+                OnPropertyChanged(() => SelectedCategory);
+            }
+        }
+        private OptimizedObservableCollection<BbDepartment> _deptCollection;
+        public OptimizedObservableCollection<BbDepartment> DeptCollection
+        {
+            get { return _deptCollection; }
+        }
+        private OptimizedObservableCollection<BbCategory> _categoryCollection;
+        public OptimizedObservableCollection<BbCategory> CategoryCollection
+        {
+            get { return _categoryCollection; }
         }
         private string _title;
         public string Title
@@ -69,7 +84,8 @@ namespace SBMS.ViewModel
             }
         }
         private string _originalFileName = string.Empty;
-        private BbCircularSearch _prevCircularSearch;
+        private BbDepartment _prevDepartment;
+        private BbCategory _prevCategory;
         private bool _editMode = false;
         private BbCircular _bbCircular;
         #endregion
@@ -81,13 +97,14 @@ namespace SBMS.ViewModel
             View = view;
             View.ViewModel = this;
             ShellContainer = compositionContainer;
-            _searchTermCollection = new OptimizedObservableCollection<BbCircularSearch>();
+            _deptCollection = new OptimizedObservableCollection<BbDepartment>();
+            _categoryCollection = new OptimizedObservableCollection<BbCategory>();
             BrowseFileCommand = new CommandHandler<object, object>(BrowseFileCommandAction);
         }
         public void PrepareView(BbCircular bbCircular)
         {
             _bbCircular = bbCircular;
-            _prevCircularSearch = new BbCircularSearch { SearchTerm = bbCircular.SearchTerm, SearchTermKey = bbCircular.SearchTermKey };
+            _prevDepartment = new BbDepartment { Name = bbCircular.Department, Key = bbCircular.DepartmentKey };
             Title = bbCircular.Title;
             SelectedFile = bbCircular.FileWithFullPath;
             _originalFileName = bbCircular.FileName;
@@ -132,12 +149,14 @@ namespace SBMS.ViewModel
                 }
                 await DbHandler.Instance.SaveBbCircularData(new BbCircular
                 {
-                    SearchTerm = SelectedSearchTerm != null ? SelectedSearchTerm.SearchTerm : string.Empty,
-                    SearchTermKey = SelectedSearchTerm != null ? SelectedSearchTerm.SearchTermKey : string.Empty,
+                    Department = SelectedDept != null ? SelectedDept.Name : string.Empty,
+                    DepartmentKey = SelectedDept != null ? SelectedDept.Key : string.Empty,
+                    Category = SelectedCategory != null ? SelectedCategory.Name : string.Empty,
+                    CategoryKey = SelectedCategory != null ? SelectedCategory.Key : string.Empty,
                     Title = Title,
                     FileName = _originalFileName,
                     FileWithFullPath = SelectedFile,
-                    PublishDate = DateTime.Now
+                    PublishDate = PubDate
                 });
                 base.SaveCommandAction(obj);
             }
@@ -152,9 +171,12 @@ namespace SBMS.ViewModel
         public override async void OnLoad()
         {
             base.OnLoad();
-            List<BbCircularSearch> searchByCollection = await DbHandler.Instance.GetAllData<BbCircularSearch>();
-            SearchTermCollection.Clear();
-            SearchTermCollection.AddRange(searchByCollection);
+            List<BbDepartment> deptCollection = await DbHandler.Instance.GetAllData<BbDepartment>();
+            List<BbCategory> categoryCollection = await DbHandler.Instance.GetAllData<BbCategory>();
+            DeptCollection.Clear();
+            CategoryCollection.Clear();
+            DeptCollection.AddRange(deptCollection);
+            CategoryCollection.AddRange(categoryCollection);
         }
         #endregion
     }

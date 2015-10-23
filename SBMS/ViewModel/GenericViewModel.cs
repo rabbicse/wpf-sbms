@@ -21,6 +21,13 @@ namespace SBMS.ViewModel
         public CommandHandler<object, object> DeleteCommand { get; private set; }
         #endregion
 
+        #region Pagination Command(s)
+        public CommandHandler<object, object> FirstCommand { get; set; }
+        public CommandHandler<object, object> PrevCommand { get; set; }
+        public CommandHandler<object, object> NextCommand { get; set; }
+        public CommandHandler<object, object> LastCommand { get; set; }
+        #endregion
+
         #region Property(s)
         private string _tag;
         public string Tag
@@ -59,6 +66,76 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => SelectedItem);
             }
         }
+        private int _start = 0;
+        public int Start
+        {
+            get { return _start; }
+            set
+            {
+                _start = value;
+                OnPropertyChanged(() => Start);
+            }
+        }
+        private int _max = 10;
+        public int Max
+        {
+            get { return _max; }
+            set
+            {
+                _max = value;
+                OnPropertyChanged(() => Max);
+            }
+        }
+        private int _total;
+        public int Total
+        {
+            get { return _total; }
+            set
+            {
+                _total = value;
+                OnPropertyChanged(() => Total);
+            }
+        }
+        private bool _isShowNext = false;
+        public bool IsShowNext
+        {
+            get { return _isShowNext; }
+            set
+            {
+                _isShowNext = value;
+                OnPropertyChanged(() => IsShowNext);
+            }
+        }
+        private bool _isShowPrev;
+        public bool IsShowPrev
+        {
+            get { return _isShowPrev; }
+            set
+            {
+                _isShowPrev = value;
+                OnPropertyChanged(() => IsShowPrev);
+            }
+        }
+        private bool _isShowFirst;
+        public bool IsShowFirst
+        {
+            get { return _isShowFirst; }
+            set
+            {
+                _isShowFirst = value;
+                OnPropertyChanged(() => IsShowFirst);
+            }
+        }
+        private bool _isShowLast;
+        public bool IsShowLast
+        {
+            get { return _isShowLast; }
+            set
+            {
+                _isShowLast = value;
+                OnPropertyChanged(() => IsShowLast);
+            }
+        }
         #endregion
 
         #region ViewModel(s)
@@ -83,12 +160,17 @@ namespace SBMS.ViewModel
             NewCommand = new CommandHandler<object, object>(NewCommandAction);
             EditCommand = new CommandHandler<object, object>(EditCommandAction);
             DeleteCommand = new CommandHandler<object, object>(DeleteCommandAction);
+
+            FirstCommand = new CommandHandler<object, object>(FirstCommandAction);
+            LastCommand = new CommandHandler<object, object>(LastCommandAction);
+            NextCommand = new CommandHandler<object, object>(NextCommandAction);
+            PrevCommand = new CommandHandler<object, object>(PrevCommandAction);
         }
         #endregion
 
         #region Command Manager(s)
         public virtual void NewCommandAction(object obj)
-        {            
+        {
         }
         public virtual void EditCommandAction(object obj)
         {
@@ -100,19 +182,30 @@ namespace SBMS.ViewModel
         }
         #endregion
 
-        #region Method(s)
-        public void OnCloseOperation() 
+        #region Pagination CommandManager(s)
+        protected virtual void FirstCommandAction(object obj)
         {
-            PopupContent = null;
-            IsShowPopup = false;
+            Start = 0;
+        }
+        protected virtual void PrevCommandAction(object obj)
+        {
+            Start--;
+        }
+        protected virtual void NextCommandAction(object obj)
+        {
+            Start++;
+        }
+        protected virtual void LastCommandAction(object obj)
+        {
+            Start = ((int)Math.Ceiling((float)Total / (float)Max)) - 1;
         }
         #endregion
 
-        #region ViewModelBase
-        public override void OnLoad()
+        #region Method(s)
+        protected ColumnConfig GenerateColumnConfig<T>()
         {
             List<Column> columns = new List<Column>();
-            PropertyInfo[] props = typeof(T1).GetProperties();
+            PropertyInfo[] props = typeof(T).GetProperties();
             foreach (PropertyInfo prop in props)
             {
                 object[] attrs = prop.GetCustomAttributes(true);
@@ -125,13 +218,33 @@ namespace SBMS.ViewModel
                     }
                 }
             }
-            ColumnConfiguration = new ColumnConfig { Columns = columns };
-            LoadCollection();
+            return new ColumnConfig { Columns = columns };
+        }
+        public void OnCloseOperation()
+        {
+            PopupContent = null;
+            IsShowPopup = false;
+        }
+        #endregion
+
+        #region ViewModelBase
+        public override async void OnLoad()
+        {
+            ColumnConfiguration = GenerateColumnConfig<T1>();
+            await LoadCollection();
+            OnCalculatePagination();
+        }
+        protected void OnCalculatePagination()
+        {
+            IsShowFirst = Total > Max && Start > 0;
+            IsShowPrev = Total > Max && Start > 0;
+            IsShowNext = Total > Max && ((Start + 1) * Max) < Total;
+            IsShowLast = Total > Max && ((Start + 1) * Max) < Total;
         }
 
-        private async void LoadCollection() 
+        private async Task LoadCollection()
         {
-            List<T1> collection = await DbHandler.Instance.GetAllData<T1>();
+            List<T1> collection = await DbHandler.Instance.GetAllData<T1>(t => Total = t, Start, Max);
             Collection.Clear();
             Collection.AddRange(collection);
         }

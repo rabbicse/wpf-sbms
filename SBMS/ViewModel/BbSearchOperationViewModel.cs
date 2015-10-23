@@ -56,7 +56,7 @@ namespace SBMS.ViewModel
         #endregion
 
         #region Command(s)
-        public CommandHandler<object, object> SaveSearchByCommand { get; private set; }
+        public CommandHandler<object, object> SaveDepartmentCommand { get; private set; }
         #endregion
 
         #region Constructor(s)
@@ -66,27 +66,25 @@ namespace SBMS.ViewModel
             View = view;
             View.ViewModel = this;
             ShellContainer = compositionContainer;
-            SaveSearchByCommand = new CommandHandler<object, object>(SaveSearchByCommandAction);
+            SaveDepartmentCommand = new CommandHandler<object, object>(SaveDepartmentCommandAction);
             _searchByCollection = new OptimizedObservableCollection<BbSearchBy>();
         }
         #endregion
 
         #region Command Handler(s)
-        private async void SaveSearchByCommandAction(object obj)
+        private async void SaveDepartmentCommandAction(object obj)
         {
-            await DbHandler.Instance.SaveData<BbSearchBy>(new BbSearchBy { SearchByName = SearchBy, SearchKey = SearchBy.Replace(" ", "_").ToUpper() });
-            List<BbSearchBy> searchByCollection = await DbHandler.Instance.GetAllData<BbSearchBy>();
-            SearchByCollection.Clear();
-            SearchByCollection.AddRange(searchByCollection);
+            await DbHandler.Instance.SaveData<BbDepartment>(new BbDepartment { Name = SearchBy, Key = SearchBy.Replace(" ", "_").ToUpper() });
+            //List<BbSearchBy> searchByCollection = await DbHandler.Instance.GetAllData<BbSearchBy>();
+            //SearchByCollection.Clear();
+            //SearchByCollection.AddRange(searchByCollection);
         }
         public override async void SaveCommandAction(object obj)
         {
-            await DbHandler.Instance.SaveData<BbCircularSearch>(new BbCircularSearch
+            await DbHandler.Instance.SaveData<BbCategory>(new BbCategory
             {
-                SearchByName = SelectedSearchBy.SearchByName,
-                SearchKey = SelectedSearchBy.SearchKey,
-                SearchTerm = SearchTerm,
-                SearchTermKey = SearchTerm.Replace(" ", "_").ToUpper()
+                Name = SearchTerm,
+                Key = SearchTerm.Replace(" ", "_").ToUpper()
             });
             base.SaveCommandAction(obj);
         }

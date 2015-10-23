@@ -9,21 +9,34 @@ namespace EkushApp.Model
 {
     public class BbCircularSearch
     {
-        [Header("Search By Key")]
+        public string Tag { get; set; }
+        [Header("Search Key")]
         public string SearchKey { get; set; }
-        [Header("Search By")]
-        public string SearchByName { get; set; }
-        [Header("Search Term Key")]
-        public string SearchTermKey { get; set; }
-        [Header("Search Term")]
-        public string SearchTerm { get; set; }
+        [Header("Search Name")]
+        public string SearchName { get; set; }
     }
-    public class BbSearchBy 
+    public class BbSearchBy
     {
         [UniqueConstraint]
         [Header("Search By Key")]
         public string SearchKey { get; set; }
-        [Header("Search By")]
-        public string SearchByName { get; set; }
+        [Header("Search Name")]
+        public string SearchName { get; set; }
+    }
+
+    public class BbDepartment
+    {
+        public string Tag { get; set; }
+        [Header("Department")]
+        public string Name { get; set; }
+        public string Key { get; set; }
+    }
+
+    public class BbCategory
+    {
+        public string Tag { get; set; }
+        [Header("Category")]
+        public string Name { get; set; }
+        public string Key { get; set; }
     }
 }

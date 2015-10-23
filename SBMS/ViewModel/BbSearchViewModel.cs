@@ -1,5 +1,7 @@
-﻿using EkushApp.Model;
+﻿using EkushApp.EmbededDB;
+using EkushApp.Model;
 using EkushApp.ShellService.MVVM;
+using EkushApp.Utility.Extensions;
 using SBMS.Generic;
 using SBMS.View;
 using System;
@@ -17,6 +19,39 @@ namespace SBMS.ViewModel
     [PartCreationPolicy(CreationPolicy.NonShared)]
     public class BbSearchViewModel : GenericViewModel<BbCircularSearch, BbSearchOperationViewModel>
     {
+        #region Property(s)
+        private ColumnConfig _deptColumnConfig;
+        public ColumnConfig DeptColumnConfiguration
+        {
+            get { return _deptColumnConfig; }
+            set
+            {
+                _deptColumnConfig = value;
+                OnPropertyChanged(() => DeptColumnConfiguration);
+            }
+        }
+        private ColumnConfig _categoryColumnConfig;
+        public ColumnConfig CategoryColumnConfiguration
+        {
+            get { return _categoryColumnConfig; }
+            set
+            {
+                _categoryColumnConfig = value;
+                OnPropertyChanged(() => CategoryColumnConfiguration);
+            }
+        }
+        private OptimizedObservableCollection<BbDepartment> _departmentCollection;
+        public OptimizedObservableCollection<BbDepartment> DepartmentCollection
+        {
+            get { return _departmentCollection; }
+        }
+        private OptimizedObservableCollection<BbCategory> _categoryCollection;
+        public OptimizedObservableCollection<BbCategory> CategoryCollection
+        {
+            get { return _categoryCollection; }
+        }
+        #endregion
+
         #region Constructor(s)
         [ImportingConstructor]
         public BbSearchViewModel(IBbSearchView view, CompositionContainer compositionContainer)
@@ -24,7 +59,9 @@ namespace SBMS.ViewModel
             View = view;
             View.ViewModel = this;
             ShellContainer = compositionContainer;
-            Tag = "BB Search Category";            
+            Tag = "BB Search Category";
+            _departmentCollection = new OptimizedObservableCollection<BbDepartment>();
+            _categoryCollection = new OptimizedObservableCollection<BbCategory>();
         }
 
         public void OperationVM_OnClosed(object sender, EventArgs e)
@@ -32,9 +69,19 @@ namespace SBMS.ViewModel
             OnCloseOperation();
             OperationVM.OnClosed -= OperationVM_OnClosed;
             _operationVM = null;
-            base.OnLoad();
+            LoadData();
         }
         #endregion
+
+        private async void LoadData()
+        {
+            DepartmentCollection.Clear();
+            CategoryCollection.Clear();
+            var dCollection = await DbHandler.Instance.GetAllData<BbDepartment>();
+            DepartmentCollection.AddRange(dCollection);
+            var cCollection = await DbHandler.Instance.GetAllData<BbCategory>();
+            CategoryCollection.AddRange(cCollection);
+        }
 
         #region Command Handler(s)
         public override void NewCommandAction(object obj)
@@ -50,7 +97,14 @@ namespace SBMS.ViewModel
         public override void OnLoad()
         {
             base.OnLoad();
+
+            DeptColumnConfiguration = GenerateColumnConfig<BbDepartment>();
+            CategoryColumnConfiguration = GenerateColumnConfig<BbCategory>();
+
+
+            LoadData();
         }
+        
         public override void OnClosing()
         {
             base.OnClosing();

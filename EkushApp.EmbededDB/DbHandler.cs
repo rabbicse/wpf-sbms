@@ -470,90 +470,190 @@ namespace EkushApp.EmbededDB
             }
             return false;
         }
-        public async Task<List<BbCircular>> GetRecentCircular()
+        public async Task<List<BbCircular>> GetRecentCircular(Action<int> setter, int start = 0, int max = 20)
         {
             List<BbCircular> collection = new List<BbCircular>();
             try
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
+                    RavenQueryStatistics stats;
                     var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
                         .WaitForNonStaleResultsAsOfLastWrite()
                         .OrderByDescending(q => q.PublishDate)
+                        .Statistics(out stats)
+                        .Skip(start * max)
+                        .Take(max)
                         .ToListAsync();
                     if (list != null && list.Count > 0)
                     {
                         collection.AddRange(list);
                     }
+                    setter(stats.TotalResults);
                 }
             }
             catch (Exception x)
             {
                 Log.Error("Error when save hardware.", x);
+                setter(0);
             }
             return collection;
         }
-        public async Task<List<BbCircular>> SearchCircularBySearchKey(string searchKey)
+        public async Task<List<BbCircular>> SearchCircularByDept(string deptKey, DateTime? dateFrom, DateTime? dateTo, Action<int> setter, int start = 0, int max = 20)
         {
             List<BbCircular> collection = new List<BbCircular>();
             try
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
-                        .Search("SearchTermKey", searchKey)
-                        .WaitForNonStaleResultsAsOfLastWrite()
-                        .ToListAsync();
+                    IList<BbCircular> list;
+                    RavenQueryStatistics stats;
+                    if (dateFrom.HasValue && dateTo.HasValue)
+                    {
+                        list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                            .WhereEquals("DepartmentKey", deptKey)
+                            .AndAlso()
+                            .WhereBetweenOrEqual("Published", dateFrom.Value.Date, dateTo.Value.Date)
+                            .WaitForNonStaleResultsAsOfLastWrite()
+                            .Statistics(out stats)
+                            .Skip(start * max)
+                            .Take(max)
+                            .ToListAsync();
+                    }
+                    else
+                    {
+                        list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                            .WhereEquals("DepartmentKey", deptKey)
+                            .WaitForNonStaleResultsAsOfLastWrite()
+                            .Statistics(out stats)
+                            .Skip(start * max)
+                            .Take(max)
+                            .ToListAsync();
+                    }
                     if (list != null && list.Count > 0)
                     {
                         collection.AddRange(list);
                     }
+                    setter(stats.TotalResults);
                 }
             }
             catch (Exception x)
             {
                 Log.Error("Error when save hardware.", x);
+                setter(0);
             }
             return collection;
         }
-        public async Task<List<BbCircular>> SearchCircularByTitle(string title)
+        public async Task<List<BbCircular>> SearchCircularByCategory(string catKey, DateTime? dateFrom, DateTime? dateTo, Action<int> setter, int start = 0, int max = 20)
         {
             List<BbCircular> collection = new List<BbCircular>();
             try
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
-                        .Search("Title", title)
-                        .WaitForNonStaleResultsAsOfLastWrite()
-                        .ToListAsync();
+                    IList<BbCircular> list;
+                    RavenQueryStatistics stats;
+                    if (dateFrom.HasValue && dateTo.HasValue)
+                    {
+                        list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                            .WhereEquals("CategoryKey", catKey)
+                            .AndAlso()
+                            .WhereBetweenOrEqual("Published", dateFrom.Value.Date, dateTo.Value.Date)
+                            .WaitForNonStaleResultsAsOfLastWrite()
+                            .Statistics(out stats)
+                            .Skip(start * max)
+                            .Take(max)
+                            .ToListAsync();
+                    }
+                    else
+                    {
+                        list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                            .WhereEquals("CategoryKey", catKey)
+                            .WaitForNonStaleResultsAsOfLastWrite()
+                            .Statistics(out stats)
+                            .Skip(start * max)
+                            .Take(max)
+                            .ToListAsync();
+                    }
                     if (list != null && list.Count > 0)
                     {
                         collection.AddRange(list);
                     }
+                    setter(stats.TotalResults);
                 }
             }
             catch (Exception x)
             {
                 Log.Error("Error when save hardware.", x);
+                setter(0);
             }
             return collection;
         }
-        public async Task<List<BbCircular>> SearchCircularByPubDate(DateTime from, DateTime to)
+        public async Task<List<BbCircular>> SearchCircularByTitle(string title, DateTime? dateFrom, DateTime? dateTo, Action<int> setter, int start = 0, int max = 20)
         {
             List<BbCircular> collection = new List<BbCircular>();
             try
             {
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
-                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
-                        .WhereBetween(x => x.PublishDate, from.Date, to.Date)
+                    IList<BbCircular> list;
+                    RavenQueryStatistics stats;
+                    if (dateFrom.HasValue && dateTo.HasValue)
+                    {
+                        list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .Search("Title", "*" + title + "*", escapeQueryOptions: EscapeQueryOptions.AllowAllWildcards)
+                        .AndAlso()
+                        .WhereBetweenOrEqual("Published", dateFrom.Value.Date, dateTo.Value.Date)
                         .WaitForNonStaleResultsAsOfLastWrite()
+                        .Statistics(out stats)
+                        .Skip(start * max)
+                        .Take(max)
+                        .ToListAsync();
+                    }
+                    else
+                    {
+                        list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .Search("Title", "*" + title + "*", escapeQueryOptions: EscapeQueryOptions.AllowAllWildcards)
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .Statistics(out stats)
+                        .Skip(start * max)
+                        .Take(max)
+                        .ToListAsync();
+                    }
+                    if (list != null && list.Count > 0)
+                    {
+                        collection.AddRange(list);
+                    }
+                    setter(stats.TotalResults);
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+                setter(0);
+            }
+            return collection;
+        }
+        public async Task<List<BbCircular>> SearchCircularByPubDate(DateTime dateFrom, DateTime dateTo, Action<int> setter, int start = 0, int max = 20)
+        {
+            List<BbCircular> collection = new List<BbCircular>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    RavenQueryStatistics stats;
+                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .WhereBetweenOrEqual("Published", dateFrom.Date, dateTo.Date)
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .Statistics(out stats)
+                        .Skip(start * max)
+                        .Take(max)
                         .ToListAsync();
                     if (list != null && list.Count > 0)
                     {
                         collection.AddRange(list);
                     }
+                    setter(stats.TotalResults);
                 }
             }
             catch (Exception x)
@@ -636,6 +736,33 @@ namespace EkushApp.EmbededDB
             }
             return false;
         }
+        public async Task<List<T>> GetAllData<T>(Action<int> setter, int start = 0, int max = 20)
+        {
+            List<T> dataCollection = new List<T>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    RavenQueryStatistics stats;
+                    var dataList = await session.Advanced.AsyncDocumentQuery<T>()
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .Skip(start * max)
+                        .Take(max)
+                        .Statistics(out stats)
+                        .ToListAsync();
+                    if (dataList != null && dataList.Count > 0)
+                    {
+                        dataCollection.AddRange(dataList);
+                    }
+                    setter(stats.TotalResults);
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return dataCollection;
+        }
         public async Task<List<T>> GetAllData<T>()
         {
             List<T> dataCollection = new List<T>();
@@ -644,7 +771,8 @@ namespace EkushApp.EmbededDB
                 using (var session = DocumentStore.OpenAsyncSession())
                 {
                     var dataList = await session.Advanced.AsyncDocumentQuery<T>()
-                        .WaitForNonStaleResultsAsOfLastWrite().ToListAsync();
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .ToListAsync();
                     if (dataList != null && dataList.Count > 0)
                     {
                         dataCollection.AddRange(dataList);

@@ -8,10 +8,15 @@ namespace EkushApp.Model
 {
     public class BbCircular
     {
-        [Header("Search Term")]
-        public string SearchTerm { get; set; }
-        [Header("Search Term Key")]
-        public string SearchTermKey { get; set; }
+        public string Tag { get; set; }
+        [Header("Department")]
+        public string Department { get; set; }
+        [Header("Department Key")]
+        public string DepartmentKey { get; set; }
+        [Header("Category")]
+        public string Category { get; set; }
+        [Header("Category Key")]
+        public string CategoryKey { get; set; }
         [Header("Circular Title")]
         public string Title { get; set; }
         [Header("Publish Date")]

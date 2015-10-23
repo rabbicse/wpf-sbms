@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EkushApp.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,10 +24,23 @@ namespace SBMS.Infrastructure
         }
         public static class RegistryConstants
         {
-            public static readonly string KEY_PATH = @"MOTO-ID\NID-PRINT";
+            public static readonly string KEY_PATH = @"MOTO-ID\SBMS";
             public static readonly string LOCALE_KEY_NAME = "LOCALE";
             public static readonly string MONITOR_X = @"MONITOR_X";
             public static readonly string MONITOR_Y = @"MONITOR_Y";
+        }
+        public static class SearchKey
+        {
+            [Header("Department wise")]
+            public const string DEPARTMENT_WISE = "DEPARTMENT_WISE";
+            [Header("Category wise")]
+            public const string CATEGORY_WISE = "CATEGORY_WISE";
+            [Header("Title wise")]
+            public const string TITLE_WISE = "TITLE_WISE";
+            [Header("Date wise")]
+            public const string DATE_WISE = "DATE_WISE";
+            [Header("Recent All")]
+            public const string RECENT_ALL = "RECENT_ALL";                        
         }
     }
 }
