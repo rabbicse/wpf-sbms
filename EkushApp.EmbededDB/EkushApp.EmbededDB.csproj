@@ -33,9 +33,6 @@
     <Reference Include="Raven.Abstractions">
       <HintPath>..\Library\Ravendb\Raven.Abstractions.dll</HintPath>
     </Reference>
-    <Reference Include="Raven.Client.Embedded">
-      <HintPath>..\Library\Ravendb\Raven.Client.Embedded.dll</HintPath>
-    </Reference>
     <Reference Include="Raven.Client.Lightweight">
       <HintPath>..\Library\Ravendb\Raven.Client.Lightweight.dll</HintPath>
     </Reference>

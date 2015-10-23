@@ -90,11 +90,11 @@ namespace SBMS.ViewModel
         public virtual void NewCommandAction(object obj)
         {            
         }
-        public void EditCommandAction(object obj)
+        public virtual void EditCommandAction(object obj)
         {
 
         }
-        private void DeleteCommandAction(object obj)
+        public virtual void DeleteCommandAction(object obj)
         {
 
         }

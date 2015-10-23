@@ -59,6 +59,36 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => BbSelectedSearchTerm);
             }
         }
+        private string _title;
+        public string Title
+        {
+            get { return _title; }
+            set
+            {
+                _title = value;
+                OnPropertyChanged(() => Title);
+            }
+        }
+        private DateTime _dateFrom = DateTime.Now;
+        public DateTime DateFrom
+        {
+            get { return _dateFrom; }
+            set
+            {
+                _dateFrom = value;
+                OnPropertyChanged(() => DateFrom);
+            }
+        }
+        private DateTime _dateTo = DateTime.Now;
+        public DateTime DateTo
+        {
+            get { return _dateTo; }
+            set
+            {
+                _dateTo = value;
+                OnPropertyChanged(() => DateTo);
+            }
+        }
         private bool _isShowSearchTerm;
         public bool IsShowSearchTerm
         {
@@ -109,6 +139,7 @@ namespace SBMS.ViewModel
             OnCloseOperation();
             OperationVM.OnClosed -= OperationVM_OnClosed;
             _operationVM = null;
+            LoadSearches();
         }
         #endregion
 
@@ -120,18 +151,39 @@ namespace SBMS.ViewModel
             PopupContent = ((ViewModelBase)OperationVM).View;
             IsShowPopup = true;
         }
+        public override void EditCommandAction(object obj)
+        {
+            base.EditCommandAction(obj);
+            OperationVM.PrepareView(obj as BbCircular);
+            OperationVM.OnClosed += OperationVM_OnClosed;
+            PopupContent = ((ViewModelBase)OperationVM).View;
+            IsShowPopup = true;
+        }
+        public override async void DeleteCommandAction(object obj)
+        {
+            base.DeleteCommandAction(obj);
+            await DbHandler.Instance.DeleteBbCircular(obj as BbCircular);
+            Collection.Remove(obj as BbCircular);
+        }
         private async void SearchCommandAction(object obj)
         {
             Collection.Clear();
             if (SelectedSearchBy.SearchKey.Equals("DATE_WISE"))
-            { }
+            {
+                List<BbCircular> list = await DbHandler.Instance.SearchCircularByPubDate(DateFrom, DateTo);
+                Collection.AddRange(list);
+            }
             else if (SelectedSearchBy.SearchKey.Equals("TITLE_WISE"))
             {
-                List<BbCircular> list = await DbHandler.Instance.SearchCircularBySearchKey(BbSelectedSearchTerm.SearchTermKey);
+                List<BbCircular> list = await DbHandler.Instance.SearchCircularByTitle(Title);
                 Collection.AddRange(list);
 
             }
-            else if (SelectedSearchBy.SearchKey.Equals("RECENT_ALL")) { }
+            else if (SelectedSearchBy.SearchKey.Equals("RECENT_ALL"))
+            {
+                List<BbCircular> list = await DbHandler.Instance.GetRecentCircular();
+                Collection.AddRange(list);
+            }
             else
             {
                 List<BbCircular> list = await DbHandler.Instance.SearchCircularBySearchKey(BbSelectedSearchTerm.SearchTermKey);
@@ -174,7 +226,7 @@ namespace SBMS.ViewModel
             List<BbCircularSearch> collection = await DbHandler.Instance.GetSearchTermCollection(SelectedSearchBy.SearchKey);
             BbSearchTermCollection.AddRange(collection);
 
-            if (SelectedSearchBy.SearchKey.Equals("DATE_WISE"))            
+            if (SelectedSearchBy.SearchKey.Equals("DATE_WISE"))
             {
                 IsShowPubDate = true;
             }
@@ -185,7 +237,7 @@ namespace SBMS.ViewModel
             else if (SelectedSearchBy.SearchKey.Equals("TITLE_WISE"))
             {
                 IsShowTitle = true;
-            }            
+            }
             else
             {
                 IsShowSearchTerm = true;

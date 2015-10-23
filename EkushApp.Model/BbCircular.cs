@@ -18,5 +18,7 @@ namespace EkushApp.Model
         public DateTime PublishDate { get; set; }
         [Header("File Name")]
         public string FileName { get; set; }
+        [Header("File With Full Path")]
+        public string FileWithFullPath { get; set; }
     }
 }

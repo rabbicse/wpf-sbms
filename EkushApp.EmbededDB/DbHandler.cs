@@ -63,9 +63,10 @@ namespace EkushApp.EmbededDB
                 FlushIndexToDiskSizeInMb = 10,
                 ResetIndexOnUncleanShutdown = true,
                 Settings = { 
-                { "Raven/StorageEngine", "voron" },
-                {"Raven/Voron/MaxBufferPoolSize", "2"},
-                {"Raven/Voron/MaxScratchBufferSize", "512"},
+                //{"Raven/StorageEngine", "voron" },
+                //{"Raven/Voron/MaxBufferPoolSize", "2"},
+                //{"Raven/Voron/MaxScratchBufferSize", "512"},
+                //{"Raven/Voron/AllowOn32Bits", "true"},
                 {"Raven/TransactionMode", "Lazy"},
                 {"Raven/MaxNumberOfItemsToIndexInSingleBatch", "128"},
                 {"Raven/MaxNumberOfItemsToPreFetchForIndexing", "128"}}
@@ -442,7 +443,7 @@ namespace EkushApp.EmbededDB
         #endregion
 
         #region BbCircular(s)
-        public async Task<bool> SaveBbCircularData(BbCircular bbCircular, string fileWithFullPath)
+        public async Task<bool> SaveBbCircularData(BbCircular bbCircular)
         {
             try
             {
@@ -453,7 +454,7 @@ namespace EkushApp.EmbededDB
                 }
                 using (var fileSession = FileStore.OpenAsyncSession())
                 {
-                    var stream = File.OpenRead(fileWithFullPath);
+                    var stream = File.OpenRead(bbCircular.FileWithFullPath);
                     var metadata = new RavenJObject
                     {
                         {"File", bbCircular.FileName},
@@ -468,6 +469,29 @@ namespace EkushApp.EmbededDB
                 Log.Error("Error when save user data.", x);
             }
             return false;
+        }
+        public async Task<List<BbCircular>> GetRecentCircular()
+        {
+            List<BbCircular> collection = new List<BbCircular>();
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .WaitForNonStaleResultsAsOfLastWrite()
+                        .OrderByDescending(q => q.PublishDate)
+                        .ToListAsync();
+                    if (list != null && list.Count > 0)
+                    {
+                        collection.AddRange(list);
+                    }
+                }
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when save hardware.", x);
+            }
+            return collection;
         }
         public async Task<List<BbCircular>> SearchCircularBySearchKey(string searchKey)
         {
@@ -567,6 +591,30 @@ namespace EkushApp.EmbededDB
                 if (stream != null) stream.Close();
             }
             return false;
+        }
+        public async Task DeleteBbCircular(BbCircular bbCircular)
+        {
+            try
+            {
+                using (var session = DocumentStore.OpenAsyncSession())
+                {
+                    var query = session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
+                        .WhereEquals("Title", bbCircular.Title)
+                        .AndAlso()
+                        .WhereEquals("PublishDate", bbCircular.PublishDate);
+                    var delOperation = await session.Advanced.DocumentStore.AsyncDatabaseCommands.DeleteByIndexAsync("BbCircularMapReduceIndex",
+                                                    new IndexQuery
+                                                    {
+                                                        Query = query.ToString()
+                                                    }, new BulkOperationOptions { AllowStale = true });
+                    await delOperation.WaitForCompletionAsync();
+                }
+                await FileStore.AsyncFilesCommands.DeleteAsync("file/" + bbCircular.FileName);
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error when delete hardware.", x);
+            }
         }
         #endregion
 

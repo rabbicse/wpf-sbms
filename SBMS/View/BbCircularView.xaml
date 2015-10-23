@@ -56,9 +56,9 @@
                             <TextBox Grid.Row="0" Grid.Column="3" Visibility="{Binding IsShowTitle, Converter={StaticResource BoolToVisibilityConverter}}" Text="{Binding Title}" Width="150" Margin="5" />
 
                             <TextBlock Grid.Row="1" Grid.Column="0" Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" Text="From: " VerticalAlignment="Center" HorizontalAlignment="Right" />
-                            <DatePicker Grid.Row="1" Grid.Column="1" Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" SelectedDate="{Binding ReceiveDate, Mode=TwoWay}" Margin="5"/>
+                            <DatePicker Grid.Row="1" Grid.Column="1" Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" SelectedDate="{Binding DateFrom, Mode=TwoWay}" Margin="5"/>
                             <TextBlock Grid.Row="1" Grid.Column="2" Text="To: " Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" />
-                            <DatePicker Grid.Row="1" Grid.Column="3" Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" SelectedDate="{Binding ReceiveDate, Mode=TwoWay}" Margin="5"/>
+                            <DatePicker Grid.Row="1" Grid.Column="3" Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" SelectedDate="{Binding DateTo, Mode=TwoWay}" Margin="5"/>
                         </Grid>
                         <StackPanel Grid.Column="1" Margin="10, 10, 10, 0">
                             <Button Content="Add Circular" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" Margin="5,0, 5, 5" />
@@ -81,7 +81,7 @@
                                                     <ColumnDefinition  Width="Auto"/>
                                                     <ColumnDefinition  Width="Auto"/>
                                                 </Grid.ColumnDefinitions>
-                                                <Button Grid.Column="0" Cursor="Hand" Command="{Binding Path=DataContext.EditHardwareCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                                                <Button Grid.Column="0" Cursor="Hand" Command="{Binding Path=DataContext.EditCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
                                                         CommandParameter="{Binding}">
                                                     <Button.Template>
                                                         <ControlTemplate>
@@ -92,7 +92,7 @@
                                                         </ControlTemplate>
                                                     </Button.Template>
                                                 </Button>
-                                                <Button Grid.Column="1" Cursor="Hand" Command="{Binding Path=DataContext.DeleteHardwareCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
+                                                <Button Grid.Column="1" Cursor="Hand" Command="{Binding Path=DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ListView}}}"
                                                         CommandParameter="{Binding}">
                                                     <Button.Template>
                                                         <ControlTemplate>

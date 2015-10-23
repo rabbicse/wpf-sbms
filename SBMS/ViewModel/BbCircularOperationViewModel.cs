@@ -1,4 +1,5 @@
 ﻿using EkushApp.EmbededDB;
+using EkushApp.Logging;
 using EkushApp.Model;
 using EkushApp.ShellService.Commands;
 using EkushApp.Utility.Extensions;
@@ -57,7 +58,20 @@ namespace SBMS.ViewModel
                 OnPropertyChanged(() => SelectedFile);
             }
         }
+        private DateTime _pubDate = DateTime.Now;
+        public DateTime PubDate
+        {
+            get { return _pubDate; }
+            set
+            {
+                _pubDate = value;
+                OnPropertyChanged(() => PubDate);
+            }
+        }
         private string _originalFileName = string.Empty;
+        private BbCircularSearch _prevCircularSearch;
+        private bool _editMode = false;
+        private BbCircular _bbCircular;
         #endregion
 
         #region Constructor(s)
@@ -69,6 +83,15 @@ namespace SBMS.ViewModel
             ShellContainer = compositionContainer;
             _searchTermCollection = new OptimizedObservableCollection<BbCircularSearch>();
             BrowseFileCommand = new CommandHandler<object, object>(BrowseFileCommandAction);
+        }
+        public void PrepareView(BbCircular bbCircular)
+        {
+            _bbCircular = bbCircular;
+            _prevCircularSearch = new BbCircularSearch { SearchTerm = bbCircular.SearchTerm, SearchTermKey = bbCircular.SearchTermKey };
+            Title = bbCircular.Title;
+            SelectedFile = bbCircular.FileWithFullPath;
+            _originalFileName = bbCircular.FileName;
+            _editMode = true;
         }
         #endregion
 
@@ -101,15 +124,27 @@ namespace SBMS.ViewModel
         }
         public override async void SaveCommandAction(object obj)
         {
-            await DbHandler.Instance.SaveBbCircularData(new BbCircular
+            try
             {
-                SearchTerm = SelectedSearchTerm.SearchTerm,
-                SearchTermKey = SelectedSearchTerm.SearchTermKey,
-                Title = Title,
-                FileName = _originalFileName,
-                PublishDate = DateTime.Now
-            }, SelectedFile);
-            base.SaveCommandAction(obj);
+                if (_editMode)
+                {
+                    await DbHandler.Instance.DeleteBbCircular(_bbCircular);
+                }
+                await DbHandler.Instance.SaveBbCircularData(new BbCircular
+                {
+                    SearchTerm = SelectedSearchTerm != null ? SelectedSearchTerm.SearchTerm : string.Empty,
+                    SearchTermKey = SelectedSearchTerm != null ? SelectedSearchTerm.SearchTermKey : string.Empty,
+                    Title = Title,
+                    FileName = _originalFileName,
+                    FileWithFullPath = SelectedFile,
+                    PublishDate = DateTime.Now
+                });
+                base.SaveCommandAction(obj);
+            }
+            catch (Exception x)
+            {
+                Log.Error("Error save.", x);
+            }
         }
         #endregion
 
