@@ -70,7 +70,7 @@ namespace EkushApp.Logging
                 config.AddTarget("fileRaven", fileTargetRaven);
 
                 // Logging rule for ravendb
-                LoggingRule ruleRaven = new LoggingRule("Raven.*", NLogLevel(LogLevel.Debug), fileTargetRaven);
+                LoggingRule ruleRaven = new LoggingRule("Raven.*", NLogLevel(LogLevel.Error), fileTargetRaven);
                 ruleRaven.Final = true;
 
                 // Logging rule for application

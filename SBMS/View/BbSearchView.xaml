@@ -35,7 +35,12 @@
                     </Grid.RowDefinitions>
                     <TextBlock Margin="10" FontWeight="Bold" Grid.Row="0" Text="Department" />
                     <Grid Grid.Row="1" Margin="10, 10, 10, 0">
-                        <Button HorizontalAlignment="Left" VerticalAlignment="Center" Content="Add Search" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" Margin="5,5, 5, 5" />
+                        <StackPanel Orientation="Horizontal">
+                            <Button HorizontalAlignment="Left" VerticalAlignment="Center" Content="Add Search" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" Margin="5,5,5,5" />
+                            <Button Content="Add BB. Circular" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewBbCircularCommand, IsAsync=True}" Margin="5,5,5,5" />
+                            <Button Content="Add SB. Circular" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewSbCircularCommand, IsAsync=True}" Margin="5,5,5,5" />
+                            <Button Content="Add Per. Info" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewPerCommand, IsAsync=True}" Margin="5,5,5,5" />
+                        </StackPanel>
                     </Grid>
                     <ListView Grid.Row="2" ItemsSource="{Binding DepartmentCollection, IsAsync=True}" SelectedItem="{Binding SelectedItem}" AlternationCount="2" AutomationProperties.AutomationId="1"
                               IsSynchronizedWithCurrentItem="True" Margin="10" View="{Binding DeptColumnConfiguration, Converter={StaticResource GenericConverter}}">

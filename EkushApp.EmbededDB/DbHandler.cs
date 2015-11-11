@@ -60,16 +60,17 @@ namespace EkushApp.EmbededDB
             var ravenConfiguration = new RavenConfiguration
             {
                 DataDirectory = DatabasePath,
-                FlushIndexToDiskSizeInMb = 10,
+                //FlushIndexToDiskSizeInMb = 10,
                 ResetIndexOnUncleanShutdown = true,
                 Settings = { 
-                //{"Raven/StorageEngine", "voron" },
+                {"Raven/StorageEngine", "voron" },
                 //{"Raven/Voron/MaxBufferPoolSize", "2"},
                 //{"Raven/Voron/MaxScratchBufferSize", "512"},
                 //{"Raven/Voron/AllowOn32Bits", "true"},
                 {"Raven/TransactionMode", "Lazy"},
-                {"Raven/MaxNumberOfItemsToIndexInSingleBatch", "128"},
-                {"Raven/MaxNumberOfItemsToPreFetchForIndexing", "128"}}
+                //{"Raven/MaxNumberOfItemsToIndexInSingleBatch", "128"},
+                //{"Raven/MaxNumberOfItemsToPreFetchForIndexing", "128"}
+                }
             };
             var ravenServer = new RavenDbServer(ravenConfiguration);
             ravenServer.UseEmbeddedHttpServer = true;
@@ -480,7 +481,7 @@ namespace EkushApp.EmbededDB
                     RavenQueryStatistics stats;
                     var list = await session.Advanced.AsyncDocumentQuery<BbCircular, BbCircularMapReduceIndex>()
                         .WaitForNonStaleResultsAsOfLastWrite()
-                        .OrderByDescending(q => q.PublishDate)
+                        .OrderByDescending("Published")
                         .Statistics(out stats)
                         .Skip(start * max)
                         .Take(max)

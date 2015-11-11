@@ -1,5 +1,6 @@
 ﻿using EkushApp.EmbededDB;
 using EkushApp.Model;
+using EkushApp.ShellService.Commands;
 using EkushApp.ShellService.MVVM;
 using EkushApp.Utility.Extensions;
 using SBMS.Generic;
@@ -52,6 +53,25 @@ namespace SBMS.ViewModel
         }
         #endregion
 
+        #region Command(s)
+        public CommandHandler<object, object> NewBbCircularCommand { get; private set; }
+        #endregion
+
+        #region ViewModel(s)
+        protected BbCircularOperationViewModel _bbOperationVM;
+        public BbCircularOperationViewModel BbOperationVM
+        {
+            get
+            {
+                if (_bbOperationVM == null)
+                {
+                    _bbOperationVM = ShellContainer.GetExportedInstance<BbCircularOperationViewModel>();
+                }
+                return _bbOperationVM;
+            }
+        }
+        #endregion
+
         #region Constructor(s)
         [ImportingConstructor]
         public BbSearchViewModel(IBbSearchView view, CompositionContainer compositionContainer)
@@ -62,13 +82,21 @@ namespace SBMS.ViewModel
             Tag = "BB Search Category";
             _departmentCollection = new OptimizedObservableCollection<BbDepartment>();
             _categoryCollection = new OptimizedObservableCollection<BbCategory>();
+            NewBbCircularCommand = new CommandHandler<object, object>(NewBbCircularCommandAction);
         }
 
         public void OperationVM_OnClosed(object sender, EventArgs e)
         {
             OnCloseOperation();
             OperationVM.OnClosed -= OperationVM_OnClosed;
-            _operationVM = null;
+            _bbOperationVM = null;
+            LoadData();
+        }
+        public void BbOperationVM_OnClosed(object sender, EventArgs e)
+        {
+            OnCloseOperation();
+            BbOperationVM.OnClosed -= BbOperationVM_OnClosed;
+            _bbOperationVM = null;
             LoadData();
         }
         #endregion
@@ -91,6 +119,12 @@ namespace SBMS.ViewModel
             PopupContent = ((ViewModelBase)OperationVM).View;
             IsShowPopup = true;
         }
+        public void NewBbCircularCommandAction(object obj)
+        {
+            BbOperationVM.OnClosed += BbOperationVM_OnClosed;
+            PopupContent = BbOperationVM.View;
+            IsShowPopup = true;
+        }
         #endregion
 
         #region ViewModelBase
@@ -104,7 +138,7 @@ namespace SBMS.ViewModel
 
             LoadData();
         }
-        
+
         public override void OnClosing()
         {
             base.OnClosing();

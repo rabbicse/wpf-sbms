@@ -60,8 +60,7 @@
                             <TextBlock Grid.Row="1" Grid.Column="2" Text="To: " Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" VerticalAlignment="Center" HorizontalAlignment="Right" />
                             <DatePicker Grid.Row="1" Grid.Column="3" Visibility="{Binding IsShowPubDate, Converter={StaticResource BoolToVisibilityConverter}}" SelectedDate="{Binding DateTo, Mode=TwoWay}" Margin="5"/>
                         </Grid>
-                        <StackPanel Grid.Column="1" Margin="10, 10, 10, 0">
-                            <Button Content="Add Circular" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding NewCommand, IsAsync=True}" Margin="5,0, 5, 5" />
+                        <StackPanel Grid.Column="1" Margin="10, 10, 10, 0">                            
                             <Button Content="Search" Cursor="Hand" Height="25" Template="{StaticResource SubmitButtonTemplate}" Command="{Binding SearchCommand, IsAsync=True}" Margin="5, 0, 5, 5" />
                         </StackPanel>
                     </Grid>
